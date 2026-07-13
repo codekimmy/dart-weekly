@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>주간 공시 분석 · DART Weekly</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F5F4F0; --surface:#FFFFFF; --ink:#1A1A18; --muted:#6E6C66; --faint:#9A988F;
+    --line:#E5E3DD; --line-strong:#D3D0C8;
+    --up:#C4283C; --up-bg:#FBECEE; --down:#1F5DA0; --down-bg:#E9F1FA;
+    --caution:#996B10; --caution-bg:#FAF3E1; --neutral:#5F5E5A; --neutral-bg:#EFEEE9;
+    --navy:#242C3A; --mono:'IBM Plex Mono',ui-monospace,monospace;
+    --sans:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);background:var(--paper);color:var(--ink);line-height:1.5}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+  header.top{border-bottom:1px solid var(--line-strong);background:var(--surface)}
+  .top-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 24px;max-width:1160px;margin:0 auto;flex-wrap:wrap}
+  .brand h1{font-size:19px;font-weight:700;letter-spacing:-0.02em;display:inline}
+  .brand .sub{font-size:12px;color:var(--muted);font-family:var(--mono);margin-left:10px}
+  .seg{display:flex;border:1px solid var(--line-strong);border-radius:7px;overflow:hidden}
+  .seg button{font-family:var(--sans);font-size:12.5px;padding:6px 12px;background:var(--surface);border:none;cursor:pointer;color:var(--muted)}
+  .seg button.on{background:var(--navy);color:#fff}
+  .disclaimer{background:#2A2117;color:#F0E6D6;font-size:12px;text-align:center;padding:7px 24px}
+  .disclaimer b{color:#F6C560;font-weight:600}
+  section.metrics{padding:26px 0 8px}
+  .metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .metric{background:var(--surface);padding:16px 18px}
+  .metric .lbl{font-size:12px;color:var(--muted);margin-bottom:7px}
+  .metric .val{font-size:26px;font-weight:600;font-family:var(--mono);letter-spacing:-0.02em}
+  .metric .val.u{color:var(--up)} .metric .val.d{color:var(--down)}
+  .toolbar{position:sticky;top:0;z-index:20;background:var(--paper);padding:14px 0 12px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{font-size:12.5px;padding:6px 12px;border:1px solid var(--line-strong);background:var(--surface);border-radius:20px;cursor:pointer;color:var(--muted);white-space:nowrap}
+  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .search{margin-left:auto;position:relative}
+  .search input{font-family:var(--sans);font-size:13px;padding:7px 12px 7px 12px;border:1px solid var(--line-strong);border-radius:7px;width:190px;background:var(--surface);color:var(--ink)}
+  .sortsel{font-family:var(--sans);font-size:12.5px;padding:7px 10px;border:1px solid var(--line-strong);border-radius:7px;background:var(--surface);color:var(--ink);cursor:pointer}
+  main{padding:8px 0 40px}
+  .catgroup{margin-top:26px}
+  .cathead{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .cathead .bar{width:4px;height:19px;border-radius:2px}
+  .cathead h2{font-size:15.5px;font-weight:700}
+  .cathead .cnt{font-family:var(--mono);font-size:12px;color:var(--faint)}
+  .cathead .dirsum{margin-left:auto;font-size:12px;font-family:var(--mono)}
+  .rowcard{background:var(--surface);border:1px solid var(--line);border-radius:11px;overflow:hidden}
+  .row{display:grid;grid-template-columns:200px 1fr 220px;gap:16px;align-items:center;padding:13px 18px;border-top:1px solid var(--line)}
+  .row:first-child{border-top:none}
+  .row:hover{background:#FBFAF7}
+  .co .nm{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .co .meta{font-family:var(--mono);font-size:11px;color:var(--faint)}
+  .co .meta .mk{padding:0 5px;border:1px solid var(--line-strong);border-radius:3px}
+  .ev .sub{display:inline-block;font-size:11px;font-family:var(--mono);color:var(--muted);background:var(--neutral-bg);padding:2px 7px;border-radius:5px;margin-bottom:5px}
+  .ev .txt{font-size:13px;color:var(--ink)}
+  .ev .scale{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:3px}
+  .dir{font-size:11px;font-weight:600;padding:2px 8px;border-radius:5px;display:inline-block;margin-left:6px}
+  .dir.u{background:var(--up-bg);color:var(--up)} .dir.d{background:var(--down-bg);color:var(--down)}
+  .dir.c{background:var(--caution-bg);color:var(--caution)} .dir.n{background:var(--neutral-bg);color:var(--neutral)}
+  .hist{border-left:1px solid var(--line);padding-left:16px}
+  .hist .htop{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px}
+  .hist .hlbl{font-size:10.5px;color:var(--faint)} .hist .hn{font-family:var(--mono);font-size:10.5px;color:var(--faint)}
+  .hist .stats{display:flex;gap:14px}
+  .hist .st .k{font-size:10px;color:var(--muted);margin-bottom:2px;display:block}
+  .hist .st .v{font-family:var(--mono);font-size:14px;font-weight:600}
+  .v.up{color:var(--up)} .v.dn{color:var(--down)} .v.fl{color:var(--neutral)}
+  .winbar{margin-top:7px;height:5px;border-radius:3px;background:var(--down-bg);overflow:hidden}
+  .winbar .fill{height:100%;background:var(--up);border-radius:3px}
+  .winbar-lbl{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:3px}
+  .backtest{margin-top:38px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+  .backtest h2{font-size:15.5px;font-weight:700;margin-bottom:4px}
+  .backtest .bdesc{font-size:12.5px;color:var(--muted);margin-bottom:16px}
+  table.bt{width:100%;border-collapse:collapse;font-size:12.5px}
+  table.bt th{text-align:right;font-weight:500;color:var(--muted);font-size:11px;padding:8px 10px;border-bottom:1px solid var(--line-strong)}
+  table.bt th:first-child{text-align:left}
+  table.bt td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:right;font-family:var(--mono)}
+  table.bt td:first-child{text-align:left;font-family:var(--sans);font-weight:500}
+  table.bt td .cat{font-size:10.5px;color:var(--faint);font-family:var(--mono);display:block}
+  .up{color:var(--up)} .dn{color:var(--down)} .fl{color:var(--neutral)}
+  footer{border-top:1px solid var(--line);padding:22px 0 46px;font-size:12px;color:var(--muted);line-height:1.9}
+  footer code{font-family:var(--mono);font-size:11.5px;background:var(--neutral-bg);padding:1px 5px;border-radius:4px}
+  .empty{text-align:center;color:var(--faint);font-size:13px;padding:40px 0}
+  @media(max-width:760px){
+    .row{grid-template-columns:1fr;gap:10px}
+    .hist{border-left:none;border-top:1px solid var(--line);padding-left:0;padding-top:10px}
+    .search{margin-left:0;width:100%}.search input{width:100%}
+  }
+</style>
+</head>
+<body>
+<div class="disclaimer">과거 유사 공시의 <b>통계적 경향</b>이며 미래 수익을 보장하지 않습니다 · <b>투자 자문이 아닙니다</b></div>
+<header class="top"><div class="top-inner">
+  <div class="brand"><h1>주간 공시 분석</h1><span class="sub" id="updated">DART · KRX WEEKLY</span></div>
+  <div class="seg" id="mktseg">
+    <button class="on" data-mkt="all">전체</button>
+    <button data-mkt="KOSPI">코스피</button>
+    <button data-mkt="KOSDAQ">코스닥</button>
+  </div>
+</div></header>
+
+<div class="wrap">
+  <section class="metrics"><div class="metric-grid" id="metrics"></div></section>
+  <div class="toolbar">
+    <div class="chips" id="catchips">
+      <span class="chip on" data-cat="all">전체</span>
+      <span class="chip" data-cat="주주환원">주주환원</span>
+      <span class="chip" data-cat="실적·펀더멘털">실적·펀더멘털</span>
+      <span class="chip" data-cat="성장·투자">성장·투자</span>
+      <span class="chip" data-cat="지배구조·구조개편">지배구조·구조개편</span>
+      <span class="chip" data-cat="자금조달">자금조달</span>
+      <span class="chip" data-cat="지분변동">지분변동</span>
+    </div>
+    <select class="sortsel" id="sortsel">
+      <option value="cat">유형별 보기</option>
+      <option value="t20">기대 방향성 강한 순</option>
+      <option value="win">과거 상승확률 높은 순</option>
+    </select>
+    <div class="search"><input type="text" id="search" placeholder="종목명 검색"></div>
+  </div>
+  <main id="main"><div class="empty">데이터를 불러오는 중…</div></main>
+  <section class="backtest">
+    <h2>이벤트별 과거 주가 반응 (백테스트 참조표)</h2>
+    <p class="bdesc">공시일(T) 기준 T+1 · T+5 · T+20 영업일 후 시장초과수익률의 과거 평균과 상승 확률입니다.</p>
+    <table class="bt" id="bttable"><thead><tr><th>공시 유형</th><th>표본</th><th>T+1</th><th>T+5</th><th>T+20</th><th>상승확률</th></tr></thead><tbody></tbody></table>
+  </section>
+  <footer>
+    데이터: <code>disclosures.json</code>(주간 수집·Actions) + <code>event_study_hist.json</code>(백테스트·로컬)을 <code>sub</code> 유형으로 join. 색상은 한국 관례(빨강=상승/호재, 파랑=하락/악재)를 따른 방향성 태그이며 매매 신호가 아닙니다.
+  </footer>
+</div>
+
+<script>
+const CAT_COLOR={'주주환원':'#C4283C','실적·펀더멘털':'#1F5DA0','성장·투자':'#4A3EA8','지배구조·구조개편':'#9A5A1E','자금조달':'#996B10','지분변동':'#8A2E52'};
+const CAT_OF={'자기주식 취득':'주주환원','자기주식 소각':'주주환원','현금배당':'주주환원','무상증자':'주주환원','잠정실적':'실적·펀더멘털','손익구조 변동':'실적·펀더멘털','단일판매·공급계약':'성장·투자','시설투자·증설':'성장·투자','타법인 취득·M&A':'성장·투자','기술이전·라이선스':'성장·투자','합병':'지배구조·구조개편','분할':'지배구조·구조개편','최대주주 변경':'지배구조·구조개편','5% 대량보유 변동':'지분변동'};
+function catOfSub(s){if(s.startsWith('유상증자')||s.indexOf('전환사채')>=0||s.indexOf('신주인수권')>=0)return '자금조달';if(s.startsWith('임원·주요주주'))return '지분변동';return CAT_OF[s]||'기타';}
+const DIRL={u:'호재',d:'악재',c:'주의',n:'중립'};
+const EMPTY_HIST={n:0,t1:0,t5:0,t20:0,win:0};
+const fmt=v=>v==null?'—':((v>0?'+':'')+v.toFixed(1)+'%');
+const vcls=v=>v==null?'fl':(v>0.3?'up':(v<-0.3?'dn':'fl'));
+let data=[], hist={}, state={mkt:'all',cat:'all',sort:'cat',q:''};
+
+function rowHTML(d){
+  const h=d.hist||EMPTY_HIST;
+  const scale=d.scale?`<div class="scale">규모 · ${d.scale}</div>`:'';
+  return `<div class="row">
+    <div class="co"><div class="nm">${d.nm}</div><div class="meta"><span class="mk">${d.mk}</span></div></div>
+    <div class="ev"><span class="sub">${d.sub}</span><div class="txt">${d.ev}<span class="dir ${d.dir}">${DIRL[d.dir]||''}</span></div>${scale}</div>
+    <div class="hist">
+      <div class="htop"><span class="hlbl">공시 후 평균 초과수익</span><span class="hn">과거 ${h.n}건</span></div>
+      <div class="stats">
+        <div class="st"><span class="k">T+1</span><span class="v ${vcls(h.t1)}">${fmt(h.t1)}</span></div>
+        <div class="st"><span class="k">T+5</span><span class="v ${vcls(h.t5)}">${fmt(h.t5)}</span></div>
+        <div class="st"><span class="k">T+20</span><span class="v ${vcls(h.t20)}">${fmt(h.t20)}</span></div>
+      </div>
+      <div class="winbar"><div class="fill" style="width:${h.win||0}%"></div></div>
+      <div class="winbar-lbl">상승확률 ${h.win==null?'—':h.win+'%'}</div>
+    </div></div>`;
+}
+
+function render(){
+  let rows=data.filter(d=>(state.mkt==='all'||d.mk===state.mkt)&&(state.cat==='all'||d.cat===state.cat)&&(state.q===''||d.nm.includes(state.q)));
+  const main=document.getElementById('main');
+  if(!rows.length){main.innerHTML='<div class="empty">조건에 맞는 공시가 없습니다.</div>';return;}
+  if(state.sort==='cat'){
+    const cats=[...new Set(rows.map(r=>r.cat))];
+    main.innerHTML=cats.map(c=>{
+      const rs=rows.filter(r=>r.cat===c);
+      const vals=rs.map(r=>(r.hist||EMPTY_HIST).t20).filter(v=>v!=null);
+      const avg=vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null;
+      return `<div class="catgroup"><div class="cathead"><span class="bar" style="background:${CAT_COLOR[c]||'#888'}"></span><h2>${c}</h2><span class="cnt">${rs.length}건</span><span class="dirsum ${vcls(avg)}">평균 T+20 ${fmt(avg)}</span></div><div class="rowcard">${rs.map(rowHTML).join('')}</div></div>`;
+    }).join('');
+  }else{
+    const key=state.sort==='t20'?(r=>Math.abs((r.hist||EMPTY_HIST).t20||0)):(r=>(r.hist||EMPTY_HIST).win||0);
+    rows=[...rows].sort((a,b)=>key(b)-key(a));
+    main.innerHTML=`<div class="catgroup"><div class="rowcard">${rows.map(rowHTML).join('')}</div></div>`;
+  }
+}
+
+function renderMetrics(){
+  const n=data.length, up=data.filter(d=>d.dir==='u').length, cau=data.filter(d=>d.dir==='d'||d.dir==='c').length;
+  document.getElementById('metrics').innerHTML=`
+    <div class="metric"><div class="lbl">분류된 유효 공시</div><div class="val">${n}</div></div>
+    <div class="metric"><div class="lbl">호재 성향</div><div class="val u">${up}</div></div>
+    <div class="metric"><div class="lbl">주의 성향</div><div class="val d">${cau}</div></div>
+    <div class="metric"><div class="lbl">유형 수</div><div class="val">${new Set(data.map(d=>d.sub)).size}</div></div>`;
+}
+
+function renderBT(){
+  const rows=Object.entries(hist).sort((a,b)=>((b[1].t20??-99)-(a[1].t20??-99)));
+  document.querySelector('#bttable tbody').innerHTML=rows.map(([sub,h])=>
+    `<tr><td>${sub}<span class="cat">${catOfSub(sub)}</span></td><td>${h.n}</td>
+     <td class="${vcls(h.t1)}">${fmt(h.t1)}</td><td class="${vcls(h.t5)}">${fmt(h.t5)}</td>
+     <td class="${vcls(h.t20)}">${fmt(h.t20)}</td><td>${h.win==null?'—':h.win+'%'}</td></tr>`).join('');
+}
+
+document.getElementById('mktseg').addEventListener('click',e=>{if(!e.target.dataset.mkt)return;[...e.currentTarget.children].forEach(b=>b.classList.remove('on'));e.target.classList.add('on');state.mkt=e.target.dataset.mkt;render();});
+document.getElementById('catchips').addEventListener('click',e=>{if(!e.target.dataset.cat)return;[...e.currentTarget.children].forEach(b=>b.classList.remove('on'));e.target.classList.add('on');state.cat=e.target.dataset.cat;render();});
+document.getElementById('sortsel').addEventListener('change',e=>{state.sort=e.target.value;render();});
+document.getElementById('search').addEventListener('input',e=>{state.q=e.target.value.trim();render();});
+
+async function boot(){
+  try{
+    const [dRes,hRes]=await Promise.all([fetch('disclosures.json'),fetch('event_study_hist.json')]);
+    const disc=await dRes.json(); hist=await hRes.json();
+    const rows=disc.rows||disc;
+    data=rows.map(r=>({...r,cat:r.cat||catOfSub(r.sub),hist:hist[r.sub]||EMPTY_HIST}));
+    if(disc.updated)document.getElementById('updated').textContent='업데이트 '+disc.updated;
+    renderMetrics();render();renderBT();
+  }catch(e){
+    document.getElementById('main').innerHTML='<div class="empty">데이터를 불러오지 못했습니다. 로컬에서 볼 때는 이 폴더에서 <code>python -m http.server</code> 실행 후 http://localhost:8000 로 접속하세요. (파일을 더블클릭하면 fetch가 막힙니다.)</div>';
+  }
+}
+boot();
+</script>
+</body>
+</html>
