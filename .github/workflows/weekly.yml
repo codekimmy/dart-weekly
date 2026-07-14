@@ -2,11 +2,11 @@ name: weekly-disclosures
 
 on:
   schedule:
-    - cron: "0 22 * * 0"      # 매주 일요일 22:00 UTC = 월요일 07:00 KST
-  workflow_dispatch:           # 수동 실행 버튼
+    - cron: "0 22 * * 0"
+  workflow_dispatch:
 
 permissions:
-  contents: write              # JSON 커밋을 위해 필요
+  contents: write
 
 jobs:
   collect:
@@ -23,7 +23,7 @@ jobs:
 
       - name: Collect disclosures
         env:
-          DART_API_KEY: ${{ secrets.DART_API_KEY }}   # 저장소 Settings > Secrets 에 등록
+          DART_API_KEY: ${{ secrets.DART_API_KEY }}
         run: python collect_disclosures.py
 
       - name: Commit updated JSON
