@@ -75,12 +75,16 @@ def category_of(sub: str):
         base = "임원·주요주주 소유변동"
     return CATEGORY.get(base, "기타")
 
-def get(path, **params):
+def get(path, retries=3, **params):
     params["crtfc_key"] = API_KEY
-    try:
-        return requests.get(f"{BASE}/{path}", params=params, timeout=20).json()
-    except Exception as e:
-        return {"status": "ERR", "message": str(e)}
+    for attempt in range(retries):
+        try:
+            return requests.get(f"{BASE}/{path}", params=params, timeout=30).json()
+        except Exception as e:
+            if attempt < retries - 1:
+                time.sleep(1.5 * (attempt + 1))  # 1.5s, 3s … 점증 대기 후 재시도
+                continue
+            return {"status": "ERR", "message": str(e)}
 
 # ── 세부 방향 분리 (DART 상세 API — 클라우드에서도 안전) ──────────────────
 def _to_int(v):
@@ -99,6 +103,9 @@ def map_rights(ic_mthn: str):
 def refine(df, bgn_de, end_de):
     """유상증자 → 배정방식, 임원·주요주주 → 매수/매도 로 세분화한 'sub' 컬럼 생성."""
     df = df.copy()
+    if df.empty or "subtype" not in df.columns:
+        df["sub"] = []
+        return df
     df["sub"] = df["subtype"]
 
     for corp_code, g in df[df.subtype == "유상증자"].groupby("corp_code"):
