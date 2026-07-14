@@ -103,6 +103,7 @@
 
 <div class="wrap">
   <section class="metrics"><div class="metric-grid" id="metrics"></div></section>
+  <div id="highlights"></div>
   <div class="toolbar">
     <div class="chips" id="catchips">
       <span class="chip on" data-cat="all">전체</span>
@@ -113,6 +114,7 @@
       <span class="chip" data-cat="자금조달">자금조달</span>
       <span class="chip" data-cat="지분변동">지분변동</span>
     </div>
+    <select class="sortsel" id="sectorsel"><option value="all">전체 업종</option></select>
     <select class="sortsel" id="sortsel">
       <option value="cat">유형별 보기</option>
       <option value="t20">기대 방향성 강한 순</option>
@@ -139,16 +141,22 @@ const DIRL={u:'호재',d:'악재',c:'주의',n:'중립'};
 const EMPTY_HIST={n:0,t1:0,t5:0,t20:0,win:0};
 const fmt=v=>v==null?'—':((v>0?'+':'')+v.toFixed(1)+'%');
 const vcls=v=>v==null?'fl':(v>0.3?'up':(v<-0.3?'dn':'fl'));
-let data=[], hist={}, state={mkt:'all',cat:'all',sort:'cat',q:''};
+let data=[], hist={}, state={mkt:'all',cat:'all',sector:'all',sort:'cat',q:''};
 
 function rowHTML(d){
   const h=d.hist||EMPTY_HIST;
-  const scale=d.scale?`<div class="scale">규모 · ${d.scale}</div>`:'';
+  const scale=d.scale?`규모 · ${d.scale}`:'';
+  const sector=d.sector?`<span style="font-family:var(--mono);font-size:11px;color:var(--faint)"> · ${d.sector}</span>`:'';
+  const rep=(d.repeat&&d.repeat>0)?`<span class="dir c" title="최근 3개월 내 같은 유형 ${d.repeat}회">↻ ${d.repeat}회 반복</span>`:'';
+  const nm=d.link?`<a href="${d.link}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--faint)">${d.nm}</a>`:d.nm;
+  const a=d.actual||null;
+  const actLine=a?`<div class="winbar-lbl" style="margin-top:6px">실제 ${['t1','t5','t20'].filter(k=>a[k]!=null).map(k=>k.toUpperCase()+' '+fmt(a[k])).join(' · ')||'집계 전'}</div>`
+                 :`<div class="winbar-lbl" style="margin-top:6px;color:var(--faint)">실제 반응 집계 전</div>`;
   return `<div class="row">
-    <div class="co"><div class="nm">${d.nm}</div><div class="meta"><span class="mk">${d.mk}</span></div></div>
-    <div class="ev"><span class="sub">${d.sub}</span><div class="txt">${d.ev}<span class="dir ${d.dir}">${DIRL[d.dir]||''}</span></div>${scale}</div>
+    <div class="co"><div class="nm">${nm}</div><div class="meta"><span class="mk">${d.mk}</span>${sector}</div></div>
+    <div class="ev"><span class="sub">${d.sub}</span><div class="txt">${d.ev}<span class="dir ${d.dir}">${DIRL[d.dir]||''}</span>${rep}</div><div class="scale">${scale}</div></div>
     <div class="hist">
-      <div class="htop"><span class="hlbl">공시 후 평균 초과수익</span><span class="hn">과거 ${h.n}건</span></div>
+      <div class="htop"><span class="hlbl">공시 후 초과수익 (과거 평균)</span><span class="hn">${h.n}건</span></div>
       <div class="stats">
         <div class="st"><span class="k">T+1</span><span class="v ${vcls(h.t1)}">${fmt(h.t1)}</span></div>
         <div class="st"><span class="k">T+5</span><span class="v ${vcls(h.t5)}">${fmt(h.t5)}</span></div>
@@ -156,11 +164,12 @@ function rowHTML(d){
       </div>
       <div class="winbar"><div class="fill" style="width:${h.win||0}%"></div></div>
       <div class="winbar-lbl">상승확률 ${h.win==null?'—':h.win+'%'}</div>
+      ${actLine}
     </div></div>`;
 }
 
 function render(){
-  let rows=data.filter(d=>(state.mkt==='all'||d.mk===state.mkt)&&(state.cat==='all'||d.cat===state.cat)&&(state.q===''||d.nm.includes(state.q)));
+  let rows=data.filter(d=>(state.mkt==='all'||d.mk===state.mkt)&&(state.cat==='all'||d.cat===state.cat)&&(state.sector==='all'||d.sector===state.sector)&&(state.q===''||d.nm.includes(state.q)));
   const main=document.getElementById('main');
   if(!rows.length){main.innerHTML='<div class="empty">조건에 맞는 공시가 없습니다.</div>';return;}
   if(state.sort==='cat'){
@@ -197,7 +206,25 @@ function renderBT(){
 
 document.getElementById('mktseg').addEventListener('click',e=>{if(!e.target.dataset.mkt)return;[...e.currentTarget.children].forEach(b=>b.classList.remove('on'));e.target.classList.add('on');state.mkt=e.target.dataset.mkt;render();});
 document.getElementById('catchips').addEventListener('click',e=>{if(!e.target.dataset.cat)return;[...e.currentTarget.children].forEach(b=>b.classList.remove('on'));e.target.classList.add('on');state.cat=e.target.dataset.cat;render();});
-document.getElementById('sortsel').addEventListener('change',e=>{state.sort=e.target.value;render();});
+function renderHighlights(){
+  const scored=data.map(d=>({d, s:((d.hist||EMPTY_HIST).win||0) + (d.repeat>0&&(d.dir==='d')?12:0)}))
+    .filter(x=>{const h=x.d.hist||EMPTY_HIST; return (h.win||0)>=58 || (x.d.repeat>0);})
+    .sort((a,b)=>b.s-a.s).slice(0,4).map(x=>x.d);
+  const el=document.getElementById('highlights');
+  if(!scored.length){el.innerHTML='';return;}
+  el.innerHTML=`<div style="margin:6px 0 2px;font-size:13px;color:var(--muted)">이번 주 주목</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-bottom:6px">`+
+    scored.map(d=>{const h=d.hist||EMPTY_HIST; const rep=d.repeat>0?` · ↻${d.repeat}회`:'';
+      const nm=d.link?`<a href="${d.link}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">${d.nm}</a>`:d.nm;
+      return `<div style="background:var(--surface);border:0.5px solid var(--line);border-radius:11px;padding:11px 13px">
+        <div style="font-size:14px;font-weight:600">${nm} <span class="dir ${d.dir}" style="vertical-align:1px">${DIRL[d.dir]||''}</span></div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--faint);margin:3px 0 6px">${d.sub}${rep}</div>
+        <div style="font-family:var(--mono);font-size:12px" class="${vcls(h.t20)}">과거 T+20 ${fmt(h.t20)} · 상승 ${h.win==null?'—':h.win+'%'}</div>
+      </div>`;
+    }).join('')+`</div>`;
+}
+
+document.getElementById('sectorsel').addEventListener('change',e=>{state.sector=e.target.value;render();});
 document.getElementById('search').addEventListener('input',e=>{state.q=e.target.value.trim();render();});
 
 async function boot(){
@@ -207,7 +234,9 @@ async function boot(){
     const rows=disc.rows||disc;
     data=rows.map(r=>({...r,cat:r.cat||catOfSub(r.sub),hist:hist[r.sub]||EMPTY_HIST}));
     if(disc.updated)document.getElementById('updated').textContent='업데이트 '+disc.updated;
-    renderMetrics();render();renderBT();
+    const secs=[...new Set(data.map(d=>d.sector).filter(Boolean))].sort();
+    document.getElementById('sectorsel').innerHTML='<option value="all">전체 업종</option>'+secs.map(s=>`<option value="${s}">${s}</option>`).join('');
+    renderMetrics();renderHighlights();render();renderBT();
   }catch(e){
     document.getElementById('main').innerHTML='<div class="empty">데이터를 불러오지 못했습니다. 로컬에서 볼 때는 이 폴더에서 <code>python -m http.server</code> 실행 후 http://localhost:8000 로 접속하세요. (파일을 더블클릭하면 fetch가 막힙니다.)</div>';
   }

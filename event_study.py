@@ -24,28 +24,44 @@ BGN_DE, END_DE = "20220101", "20251231"
 HORIZONS = [1, 5, 20]
 MIN_SAMPLE = 20
 
+def _date_chunks(bgn, end, months=3):
+    """조회 기간을 DART 제한(전체조회 시 3개월)에 맞춰 나눔."""
+    from datetime import datetime
+    s = datetime.strptime(bgn, "%Y%m%d")
+    e = datetime.strptime(end, "%Y%m%d")
+    out = []
+    while s <= e:
+        # s 로부터 약 months개월 뒤(대략 30*months일)까지, 단 end 넘지 않게
+        chunk_end = min(e, s + timedelta(days=30 * months))
+        out.append((s.strftime("%Y%m%d"), chunk_end.strftime("%Y%m%d")))
+        s = chunk_end + timedelta(days=1)
+    return out
+
 def fetch_disclosures():
     rows = []
     for corp_cls, market in (("Y", "KOSPI"), ("K", "KOSDAQ")):
-        page = 1
-        while True:
-            r = dc.get("list.json", bgn_de=BGN_DE, end_de=END_DE, corp_cls=corp_cls,
-                       page_no=page, page_count=100)
-            if r.get("status") != "000":
-                break
-            for it in r.get("list", []):
-                if not it.get("stock_code"):
-                    continue
-                sub = dc.classify(it["report_nm"])
-                if sub is None:
-                    continue
-                rows.append({"rcept_no": it["rcept_no"], "corp_code": it["corp_code"],
-                             "date": it["rcept_dt"], "ticker": it["stock_code"],
-                             "market": market, "subtype": sub})
-            if page >= int(r.get("total_page", 1)):
-                break
-            page += 1
-            time.sleep(0.25)
+        for bgn, end in _date_chunks(BGN_DE, END_DE):
+            page = 1
+            while True:
+                r = dc.get("list.json", bgn_de=bgn, end_de=end, corp_cls=corp_cls,
+                           page_no=page, page_count=100)
+                if r.get("status") != "000":
+                    if r.get("status") not in ("013",):  # 013=데이터 없음(정상)
+                        print(f"  [경고] {market} {bgn}~{end}: {r.get('status')} {r.get('message')}")
+                    break
+                for it in r.get("list", []):
+                    if not it.get("stock_code"):
+                        continue
+                    sub = dc.classify(it["report_nm"])
+                    if sub is None:
+                        continue
+                    rows.append({"rcept_no": it["rcept_no"], "corp_code": it["corp_code"],
+                                 "date": it["rcept_dt"], "ticker": it["stock_code"],
+                                 "market": market, "subtype": sub})
+                if page >= int(r.get("total_page", 1)):
+                    break
+                page += 1
+                time.sleep(0.25)
     return pd.DataFrame(rows)
 
 _cache = {}
@@ -89,9 +105,16 @@ def excess_returns(row):
     return out
 
 def main():
+    if dc.API_KEY.startswith("여기에"):
+        print("오류: DART_API_KEY 환경변수가 설정되지 않았습니다.")
+        print("  Windows(cmd):  set DART_API_KEY=발급받은키   그다음 python event_study.py")
+        return
     print(f"[1/3] 공시 수집 ({BGN_DE}~{END_DE})")
     df = fetch_disclosures()
     print(f"      {len(df):,}건")
+    if df.empty:
+        print("수집된 공시가 0건입니다. 인증키가 올바른지, 조회 기간이 맞는지 확인하세요.")
+        return
 
     print("[2/3] 세부 방향 분리")
     df = dc.refine(df, BGN_DE, END_DE)
