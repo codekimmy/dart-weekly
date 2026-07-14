@@ -1,0 +1,12 @@
+{
+  "date": "20260710",
+  "index_ret_6m": 5.2,
+  "rows": [
+    {"ticker":"000270","nm":"진성반도체","ma200_above":true,"pos_52w":98.2,"rs_6m":31.4,"cap":15000,"sector":"반도체","has_disc":true,"score":92.1},
+    {"ticker":"207940","nm":"제일제약","ma200_above":true,"pos_52w":95.0,"rs_6m":22.8,"cap":6200,"sector":"제약","has_disc":true,"score":85.3},
+    {"ticker":"373220","nm":"그린일렉","ma200_above":true,"pos_52w":91.4,"rs_6m":40.1,"cap":2400,"sector":"2차전지","has_disc":true,"score":84.6},
+    {"ticker":"042700","nm":"동성테크","ma200_above":true,"pos_52w":88.7,"rs_6m":18.2,"cap":1850,"sector":"반도체","has_disc":false,"score":76.4},
+    {"ticker":"009150","nm":"광성전자","ma200_above":true,"pos_52w":84.3,"rs_6m":12.5,"cap":7300,"sector":"전자부품","has_disc":true,"score":70.1},
+    {"ticker":"115160","nm":"우진소프트","ma200_above":true,"pos_52w":79.8,"rs_6m":9.4,"cap":3300,"sector":"SW","has_disc":false,"score":64.7}
+  ]
+}
