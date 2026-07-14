@@ -1,0 +1,14 @@
+{
+  "date": "20260710",
+  "criteria": "거래량 3배+ · 상승",
+  "rows": [
+    {"ticker": "373220", "nm": "그린일렉",   "mult": 8.4, "chg": 14.2, "close": 42350, "cap": 2400,  "sector": "2차전지", "has_disc": true},
+    {"ticker": "196170", "nm": "셀바이오",   "mult": 6.1, "chg": 9.8,  "close": 88200, "cap": 4100,  "sector": "바이오",  "has_disc": true},
+    {"ticker": "263750", "nm": "퓨처게임즈", "mult": 5.7, "chg": 7.1,  "close": 15600, "cap": 1200,  "sector": "게임",    "has_disc": true},
+    {"ticker": "042700", "nm": "동성테크",   "mult": 5.2, "chg": 11.3, "close": 9870,  "cap": 1850,  "sector": "반도체",  "has_disc": false},
+    {"ticker": "115160", "nm": "우진소프트", "mult": 4.6, "chg": 5.4,  "close": 23400, "cap": 3300,  "sector": "SW",      "has_disc": false},
+    {"ticker": "950130", "nm": "한빛메디컬", "mult": 4.1, "chg": 6.7,  "close": 12050, "cap": 980,   "sector": "의료기기","has_disc": false},
+    {"ticker": "277810", "nm": "레드로버",   "mult": 3.8, "chg": 3.2,  "close": 5410,  "cap": 720,   "sector": "콘텐츠",  "has_disc": false},
+    {"ticker": "060310", "nm": "에스제이", "mult": 3.3, "chg": 4.9,  "close": 3120,  "cap": 640,   "sector": "IT부품",  "has_disc": false}
+  ]
+}

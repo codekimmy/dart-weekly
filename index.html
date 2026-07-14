@@ -102,6 +102,13 @@
 </div></header>
 
 <div class="wrap">
+  <div style="display:flex;gap:8px;padding:16px 0 0">
+    <button class="vtab on" data-view="disc" style="font-family:var(--sans);font-size:13.5px;padding:7px 16px;border:1px solid var(--line-strong);border-radius:8px;background:var(--navy);color:#fff;cursor:pointer">공시 리포트</button>
+    <button class="vtab" data-view="vol" style="font-family:var(--sans);font-size:13.5px;padding:7px 16px;border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);color:var(--muted);cursor:pointer">거래량 급증</button>
+    <button class="vtab" data-view="trend" style="font-family:var(--sans);font-size:13.5px;padding:7px 16px;border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);color:var(--muted);cursor:pointer">추세·모멘텀</button>
+  </div>
+
+  <div id="disc-view">
   <section class="metrics"><div class="metric-grid" id="metrics"></div></section>
   <div id="highlights"></div>
   <div class="toolbar">
@@ -128,6 +135,35 @@
     <p class="bdesc">공시일(T) 기준 T+1 · T+5 · T+20 영업일 후 시장초과수익률의 과거 평균과 상승 확률입니다.</p>
     <table class="bt" id="bttable"><thead><tr><th>공시 유형</th><th>표본</th><th>T+1</th><th>T+5</th><th>T+20</th><th>상승확률</th></tr></thead><tbody></tbody></table>
   </section>
+  </div>
+
+  <div id="vol-view" style="display:none">
+    <section class="metrics" style="padding-top:20px"><div class="metric-grid" id="vol-metrics"></div></section>
+    <div style="background:var(--caution-bg);border:0.5px solid #E4D4A8;border-radius:11px;padding:12px 15px;margin:14px 0 12px">
+      <div style="font-size:13px;font-weight:600;color:var(--caution);margin-bottom:5px">거래량 급증 — 이렇게 보세요</div>
+      <div style="font-size:12.5px;color:#7A5610;line-height:1.75">
+        최근 20영업일 평균 대비 <b>3배 이상</b> 거래량 + 당일 상승 종목입니다.
+        배수가 높다고 좋은 게 아닙니다 — 급등 초입일 수도, 이미 오른 뒤 고점에서 물량이 터지는 막차일 수도 있어요.
+        <b>매수 신호가 아니라 "왜 거래가 몰렸나 들여다볼 후보"</b>로만 쓰고,
+        <b>공시 있음</b> 배지처럼 이유가 확인되는 종목 위주로 검토하세요. 최종 판단은 본인 몫입니다.
+      </div>
+    </div>
+    <div class="rowcard" id="vol-list"></div>
+  </div>
+
+  <div id="trend-view" style="display:none">
+    <section class="metrics" style="padding-top:20px"><div class="metric-grid" id="trend-metrics"></div></section>
+    <div style="background:var(--down-bg);border:0.5px solid #Bcd4ea;border-radius:11px;padding:12px 15px;margin:14px 0 12px">
+      <div style="font-size:13px;font-weight:600;color:var(--down);margin-bottom:5px">추세·모멘텀 + 재무 건전성 — 이렇게 보세요</div>
+      <div style="font-size:12.5px;color:#1A4A7A;line-height:1.75">
+        <b>200일선 위</b>이면서 최근 6개월 시장 대비 강한(상대강도+) 종목만 모았습니다.
+        <b>52주</b>는 52주 신고가 대비 현재 위치(100%=신고가), <b>RS</b>는 지수 대비 초과수익입니다.
+        <b>재무 양호</b> 배지는 매출·영업이익 성장 + 흑자 + 부채비율 200% 미만을 뜻합니다.
+        추세가 '유지 중'임을 보여줄 뿐 하락 전환·개별 악재를 막지 못합니다. 후보를 좁히는 도구이지 매수 신호가 아닙니다.
+      </div>
+    </div>
+    <div class="rowcard" id="trend-list"></div>
+  </div>
   <footer>
     데이터: <code>disclosures.json</code>(주간 수집·Actions) + <code>event_study_hist.json</code>(백테스트·로컬)을 <code>sub</code> 유형으로 join. 색상은 한국 관례(빨강=상승/호재, 파랑=하락/악재)를 따른 방향성 태그이며 매매 신호가 아닙니다.
   </footer>
@@ -141,7 +177,64 @@ const DIRL={u:'호재',d:'악재',c:'주의',n:'중립'};
 const EMPTY_HIST={n:0,t1:0,t5:0,t20:0,win:0};
 const fmt=v=>v==null?'—':((v>0?'+':'')+v.toFixed(1)+'%');
 const vcls=v=>v==null?'fl':(v>0.3?'up':(v<-0.3?'dn':'fl'));
-let data=[], hist={}, state={mkt:'all',cat:'all',sector:'all',sort:'cat',q:''};
+let data=[], hist={}, vol={rows:[]}, trend={rows:[]}, health={}, state={mkt:'all',cat:'all',sector:'all',sort:'cat',q:''};
+
+function renderVolume(){
+  const rows=vol.rows||[];
+  const withDisc=rows.filter(r=>r.has_disc).length;
+  document.getElementById('vol-metrics').innerHTML=`
+    <div class="metric"><div class="lbl">급증 종목</div><div class="val u">${rows.length}</div><div class="foot">${vol.date||''} 기준</div></div>
+    <div class="metric"><div class="lbl">공시도 있는 종목</div><div class="val">${withDisc}</div><div class="foot">재료+수급 교차</div></div>
+    <div class="metric"><div class="lbl">기준</div><div class="val" style="font-size:15px">${vol.criteria||'거래량 3배+'}</div></div>`;
+  const el=document.getElementById('vol-list');
+  if(!rows.length){el.innerHTML='<div class="empty">거래량 급증 데이터가 없습니다. 로컬에서 volume_scan.py 를 실행해 volume_spikes.json 을 만드세요.</div>';return;}
+  el.innerHTML=rows.map(r=>{
+    const disc=r.has_disc?`<span class="dir u" title="이번 주 공시 있음">공시 있음</span>`:'';
+    const cap=r.cap?`시총 ${r.cap.toLocaleString()}억`:'';
+    const sec=r.sector?` · ${r.sector}`:'';
+    return `<div class="row" style="grid-template-columns:200px 1fr 150px">
+      <div class="co"><div class="nm">${r.nm}</div><div class="meta"><span class="mk">${r.ticker}</span><span style="font-family:var(--mono);font-size:11px;color:var(--faint)">${sec}</span></div></div>
+      <div class="ev"><div class="txt"><span style="font-family:var(--mono);font-weight:600;color:var(--up)">거래량 ${r.mult}배</span> ${disc}</div><div class="scale">${cap} · 종가 ${r.close.toLocaleString()}원</div></div>
+      <div class="hist" style="text-align:right"><div class="st"><span class="k">당일 등락</span><span class="v up" style="font-size:18px">+${r.chg}%</span></div></div>
+    </div>`;
+  }).join('');
+}
+
+function renderTrend(){
+  const rows=trend.rows||[];
+  const healthy=rows.filter(r=>health[r.ticker] && health[r.ticker].healthy).length;
+  document.getElementById('trend-metrics').innerHTML=`
+    <div class="metric"><div class="lbl">추세 상위 종목</div><div class="val u">${rows.length}</div><div class="foot">${trend.date||''} 기준</div></div>
+    <div class="metric"><div class="lbl">재무도 양호</div><div class="val">${healthy}</div><div class="foot">추세+펀더멘털 교집합</div></div>
+    <div class="metric"><div class="lbl">지수 6개월</div><div class="val ${vcls(trend.index_ret_6m)}">${fmt(trend.index_ret_6m)}</div><div class="foot">상대강도 기준선</div></div>`;
+  const el=document.getElementById('trend-list');
+  if(!rows.length){el.innerHTML='<div class="empty">추세 데이터가 없습니다. 로컬에서 trend_scan.py 를 실행하세요.</div>';return;}
+  el.innerHTML=rows.map(r=>{
+    const h=health[r.ticker];
+    const hb=h?(h.healthy?`<span class="dir u" title="매출·이익 성장+흑자+부채비율<200%">재무 양호</span>`:`<span class="dir d" title="성장 둔화/적자/고부채">재무 주의</span>`):'';
+    const disc=r.has_disc?`<span class="dir c">공시 있음</span>`:'';
+    const cap=r.cap?`시총 ${r.cap.toLocaleString()}억`:'';
+    const sec=r.sector?` · ${r.sector}`:'';
+    const finline=h?`<div class="winbar-lbl" style="margin-top:4px">매출 ${fmt(h.sales_growth)} · 영업익 ${fmt(h.op_growth)} · 부채 ${h.debt_ratio!=null?h.debt_ratio+'%':'—'}</div>`:'';
+    return `<div class="row" style="grid-template-columns:200px 1fr 210px">
+      <div class="co"><div class="nm">${r.nm}</div><div class="meta"><span class="mk">${r.ticker}</span><span style="font-family:var(--mono);font-size:11px;color:var(--faint)">${sec}</span></div></div>
+      <div class="ev"><div class="txt">${r.ma200_above?'<span class="dir u">200일선 위</span>':''} ${hb} ${disc}</div><div class="scale">${cap}</div>${finline}</div>
+      <div class="hist"><div class="stats">
+        <div class="st"><span class="k">52주 위치</span><span class="v ${r.pos_52w>=90?'up':'fl'}">${r.pos_52w!=null?r.pos_52w+'%':'—'}</span></div>
+        <div class="st"><span class="k">상대강도(6M)</span><span class="v ${vcls(r.rs_6m)}">${fmt(r.rs_6m)}</span></div>
+      </div></div>
+    </div>`;
+  }).join('');
+}
+
+document.querySelectorAll('.vtab').forEach(b=>b.addEventListener('click',e=>{
+  document.querySelectorAll('.vtab').forEach(x=>{x.classList.remove('on');x.style.background='var(--surface)';x.style.color='var(--muted)';});
+  e.target.classList.add('on');e.target.style.background='var(--navy)';e.target.style.color='#fff';
+  const v=e.target.dataset.view;
+  document.getElementById('disc-view').style.display  = v==='disc'?'':'none';
+  document.getElementById('vol-view').style.display   = v==='vol'?'':'none';
+  document.getElementById('trend-view').style.display = v==='trend'?'':'none';
+}));
 
 function rowHTML(d){
   const h=d.hist||EMPTY_HIST;
@@ -231,12 +324,15 @@ async function boot(){
   try{
     const [dRes,hRes]=await Promise.all([fetch('disclosures.json'),fetch('event_study_hist.json')]);
     const disc=await dRes.json(); hist=await hRes.json();
+    try{ vol=await (await fetch('volume_spikes.json')).json(); }catch(e){ vol={rows:[]}; }
+    try{ trend=await (await fetch('trend_signals.json')).json(); }catch(e){ trend={rows:[]}; }
+    try{ const hs=await (await fetch('health_signals.json')).json(); (hs.rows||[]).forEach(r=>health[r.ticker]=r); }catch(e){ health={}; }
     const rows=disc.rows||disc;
     data=rows.map(r=>({...r,cat:r.cat||catOfSub(r.sub),hist:hist[r.sub]||EMPTY_HIST}));
     if(disc.updated)document.getElementById('updated').textContent='업데이트 '+disc.updated;
     const secs=[...new Set(data.map(d=>d.sector).filter(Boolean))].sort();
     document.getElementById('sectorsel').innerHTML='<option value="all">전체 업종</option>'+secs.map(s=>`<option value="${s}">${s}</option>`).join('');
-    renderMetrics();renderHighlights();render();renderBT();
+    renderMetrics();renderHighlights();render();renderBT();renderVolume();renderTrend();
   }catch(e){
     document.getElementById('main').innerHTML='<div class="empty">데이터를 불러오지 못했습니다. 로컬에서 볼 때는 이 폴더에서 <code>python -m http.server</code> 실행 후 http://localhost:8000 로 접속하세요. (파일을 더블클릭하면 fetch가 막힙니다.)</div>';
   }
