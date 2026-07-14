@@ -65,6 +65,8 @@ def fetch_disclosures():
     return pd.DataFrame(rows)
 
 _cache = {}
+_IDX_FULL = {}   # {"KOSPI": 종가 시계열, "KOSDAQ": ...}  — 한 번만 로드
+
 def _shift(d, n):
     return (datetime.strptime(d, "%Y%m%d") + timedelta(days=n)).strftime("%Y%m%d")
 
@@ -76,31 +78,48 @@ def _prices(ticker, bgn, end):
         time.sleep(0.15)
     return _cache[k]
 
-def _index(market, bgn, end):
-    k = ("idx", market, bgn, end)
-    if k not in _cache:
-        try: _cache[k] = stock.get_index_ohlcv_by_date(bgn, end, "1001" if market == "KOSPI" else "2001")["종가"]
-        except Exception: _cache[k] = None
-        time.sleep(0.15)
-    return _cache[k]
+def load_full_index():
+    """전체 기간 지수를 시장별로 한 번만 로드 (pykrx 실패 시 FinanceDataReader 대체)."""
+    lo, hi = BGN_DE, _shift(END_DE, 70)
+    for market, code, fdr_code in (("KOSPI", "1001", "KS11"), ("KOSDAQ", "2001", "KQ11")):
+        s = None
+        for attempt in range(3):
+            try:
+                s = stock.get_index_ohlcv_by_date(lo, hi, code)["종가"]
+                if s is not None and len(s):
+                    break
+            except Exception:
+                pass
+            time.sleep(2 * (attempt + 1))
+        if s is None or not len(s):
+            try:
+                import FinanceDataReader as fdr
+                s = fdr.DataReader(fdr_code,
+                                   datetime.strptime(lo, "%Y%m%d"),
+                                   datetime.strptime(hi, "%Y%m%d"))["Close"]
+            except Exception:
+                s = None
+        _IDX_FULL[market] = s
+        ok = s is not None and len(s)
+        print(f"  지수 로드 {market}: {'OK (' + str(len(s)) + '일)' if ok else '실패 → 초과수익 보정 없이 진행'}")
 
 def excess_returns(row):
     end = _shift(row.date, 60)
     px = _prices(row.ticker, row.date, end)
     if px is None or len(px) < max(HORIZONS) + 2:
         return None
-    idx = _index(row.market, row.date, end)
-    px = px.reset_index(drop=True)
+    idx = _IDX_FULL.get(row.market)
+    aligned = idx.reindex(px.index).ffill() if idx is not None and len(idx) else None
     base_s = px.iloc[0]
-    if idx is not None and len(idx):
-        idx = idx.reset_index(drop=True); base_i = idx.iloc[0]
-    else:
-        idx, base_i = None, None
+    base_i = aligned.iloc[0] if (aligned is not None and len(aligned)) else None
     out = {}
     for h in HORIZONS:
-        if h >= len(px): out[h] = None; continue
+        if h >= len(px):
+            out[h] = None; continue
         rs = px.iloc[h] / base_s - 1
-        ri = (idx.iloc[h] / base_i - 1) if (idx is not None and h < len(idx) and base_i) else 0
+        ri = 0
+        if aligned is not None and base_i and h < len(aligned) and pd.notna(aligned.iloc[h]):
+            ri = aligned.iloc[h] / base_i - 1
         out[h] = round((rs - ri) * 100, 4)
     return out
 
@@ -120,6 +139,8 @@ def main():
     df = dc.refine(df, BGN_DE, END_DE)
 
     print("[3/3] 주가 대조 & 집계 …")
+    print("  지수 로드 중…")
+    load_full_index()
     recs = []
     for _, row in df.iterrows():
         er = excess_returns(row)
