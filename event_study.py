@@ -100,7 +100,7 @@ def main():
     recs = []
     for _, row in df.iterrows():
         er = excess_returns(row)
-        if er: recs.append({"sub": row.sub, **er})
+        if er: recs.append({"sub": row["sub"], **er})
     res = pd.DataFrame(recs)
 
     hist = {}

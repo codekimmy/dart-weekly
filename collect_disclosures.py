@@ -87,11 +87,12 @@ def collect():
     # 대시보드 형식으로 변환
     out = []
     for _, r in df.iterrows():
+        sub = r["sub"]
         out.append({
-            "nm": r.nm, "mk": r.mk,
-            "cat": dc.category_of(r.sub), "sub": r.sub,
-            "ev": r.report_nm, "scale": "",
-            "dir": dc.DIR_DEFAULT.get(r.sub, "n"),
+            "nm": r["nm"], "mk": r["mk"],
+            "cat": dc.category_of(sub), "sub": sub,
+            "ev": r["report_nm"], "scale": "",
+            "dir": dc.DIR_DEFAULT.get(sub, "n"),
         })
     _save(out)
     print(f"저장 완료: disclosures.json ({len(out)}건)")
