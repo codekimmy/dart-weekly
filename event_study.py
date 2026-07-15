@@ -185,6 +185,11 @@ def main():
     res = pd.DataFrame(recs)
     if "_key" in res.columns:
         res = res.drop(columns=["_key"])
+    # CSV 재로딩 시 컬럼명이 문자열이 되므로 정수 지평 키로 통일 + 숫자 변환
+    res = res.rename(columns={str(h): h for h in HORIZONS})
+    for h in HORIZONS:
+        if h in res.columns:
+            res[h] = pd.to_numeric(res[h], errors="coerce")
 
     hist = {}
     for sub, g in res.groupby("sub"):
