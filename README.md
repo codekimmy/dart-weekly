@@ -1,59 +1,66 @@
-# 주간 공시 분석 대시보드 (하이브리드)
+# 주간 공시 분석 대시보드
 
-DART 공시를 주 단위로 수집·분류하고, 위험 종목(관리종목 등)을 걸러낸 뒤,
-공시 유형별 "과거 주가 반응" 통계와 함께 웹 대시보드로 보여줍니다.
+DART 공시를 수집·분류하고, 위험 종목을 거른 뒤, 과거 주가 반응 통계·거래량 급증·추세/재무
+필터와 함께 웹 대시보드로 보여줍니다.
 
-## 구조
+## 화면 (index.html — GitHub Pages)
+- **공시 리포트**: 이번 주 공시를 6개 대분류/18개 세부 유형으로 분류. DART 원문 링크, 업종,
+  시총, 연속 공시 배지, 과거 주가 반응(T+1/5/20·상승확률), 실제 반응 비교
+- **거래량 급증**: 20일 평균 대비 3배+ & 상승 종목 (공시 있음 배지로 교차 확인)
+- **추세·모멘텀**: 200일선 위 + 52주 위치 + 상대강도, 재무 양호/주의 배지
 
-```
-dart-weekly/
-├─ index.html               ← 대시보드 (GitHub Pages가 서빙, 두 JSON을 fetch)
-├─ disclosures.json         ← 그 주의 공시 (매주 Actions가 갱신)
-├─ event_study_hist.json    ← 유형별 과거 주가 반응 통계 (가끔 로컬에서 갱신)
-├─ dart_common.py           ← 공통 로직 (분류·카테고리·세부방향 분리)
-├─ collect_disclosures.py   ← 주간 수집 (DART 전용) → disclosures.json
-├─ event_study.py           ← 백테스트 (pykrx) → event_study_hist.json
-├─ requirements.txt         ← Actions용 의존성
-└─ .github/workflows/weekly.yml  ← 매주 자동 실행
-```
+## 파일 역할
 
-## 역할 분담 (하이브리드)
-
-| 작업 | 어디서 | 무엇을 쓰나 | 주기 |
+| 파일 | 실행 위치 | 역할 | 산출물 |
 |---|---|---|---|
-| 주간 공시 수집 | GitHub Actions (클라우드) | DART API only | 매주 자동 |
-| 백테스트 통계 | 내 PC (로컬) | pykrx | 가끔 (월/분기) |
-| 대시보드 열람 | GitHub Pages | — | 상시(URL) |
+| `collect_disclosures.py` | Actions(주간) | 공시 수집·분류·위험제외·링크/업종/시총/연속 | `disclosures.json` |
+| `event_study.py` | 로컬 | 이벤트 스터디 백테스트 (연도별) | `event_study_hist.json` |
+| `volume_scan.py` | 로컬 | 거래량 급증 스캔 | `volume_spikes.json` |
+| `trend_scan.py` | 로컬 | 추세·모멘텀 스캔 | `trend_signals.json` |
+| `health_scan.py` | 로컬 | 재무 건전성 점검 | `health_signals.json` |
+| `track_prices.py` | 로컬 | 공시 후 실제 주가 채우기 | `disclosures.json` 갱신 |
+| `dart_common.py` | 공용 | 분류 규칙·카테고리·세부방향 분리 | — |
 
-pykrx는 클라우드 IP에서 막힐 수 있어 백테스트만 로컬에서 돌립니다.
-
-## 설치 순서
-
-1. 이 폴더를 GitHub 저장소로 push
-2. 저장소 **Settings → Secrets and variables → Actions** 에서
-   `DART_API_KEY` 를 추가 (https://opendart.fss.or.kr 에서 무료 발급)
-3. 저장소 **Settings → Pages** 에서 Source를 `main` 브랜치로 지정 → 사이트 URL 생성
-4. **Actions** 탭에서 `weekly-disclosures` 워크플로를 한 번 수동 실행(Run workflow)
-
-## 백테스트 통계 갱신 (로컬)
+## 백테스트 사용법 (연도별 분할)
 
 ```bash
-pip install requests pandas pykrx
-export DART_API_KEY=발급받은키          # Windows: set DART_API_KEY=...
-python event_study.py                   # event_study_hist.json 생성
-git add event_study_hist.json && git commit -m "update backtest" && git push
+set DART_API_KEY=발급받은키          # Windows
+
+python event_study.py 2024           # 2024년만 처리 → _year_2024.csv
+python event_study.py 2023           # 2023 추가 (2024는 재수집 없이 합산)
+python event_study.py 2022 2023 2024 # 여러 해 차례로
+python event_study.py                # 수집 없이 기존 연도 조각만 합쳐 통계 재생성
 ```
 
-## 로컬에서 화면만 미리 보기
+- 중간에 끊겨도 같은 명령을 다시 실행하면 이어서 진행합니다.
+- 이미 끝난 연도는 자동으로 건너뜁니다.
+- 표본 20건 미만 유형은 `(표본부족)`으로 표시됩니다.
+
+## 로컬 스캔
+
+```bash
+python volume_scan.py        # 최근 거래일 기준
+python trend_scan.py
+python health_scan.py        # DART_API_KEY 필요
+python track_prices.py       # 공시 며칠 뒤 실행
+```
+
+## 로컬에서 화면 미리보기
 
 ```bash
 python -m http.server 8000
-# http://localhost:8000 접속  (파일 더블클릭 X — fetch가 막힙니다)
+# http://localhost:8000  (파일 더블클릭 X — fetch가 막힘)
+```
+
+## 설치
+
+```bash
+pip install requests pandas pykrx finance-datareader
 ```
 
 ## 주의
 
-- 통계는 과거 경향이며 미래 수익을 보장하지 않습니다. 투자 자문이 아닙니다.
-- 게시되는 JSON/HTML은 공개됩니다. **API 키는 절대 파일에 넣지 말 것** (Secrets/환경변수만 사용).
-- 거래정지·불성실공시 종목은 KRX 정보데이터시스템에서 받아 `risk_extra.json`
-  (종목코드 배열)로 저장해두면 제외 필터에 자동 합쳐집니다.
+- 통계는 과거 경향이며 미래 수익을 보장하지 않습니다. **투자 자문이 아닙니다.**
+- 거래량 급증·추세 지표는 후보를 좁히는 도구이지 매수 신호가 아닙니다.
+- 게시되는 JSON/HTML은 공개됩니다. **API 키는 파일에 넣지 말고** Secrets/환경변수만 사용하세요.
+- `_year_*.csv` 등 로컬 캐시는 `.gitignore`로 제외됩니다.

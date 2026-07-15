@@ -1,17 +1,26 @@
 """
-event_study.py — 이벤트 스터디 백테스트 (로컬 PC에서 실행)
+event_study.py — 이벤트 스터디 백테스트 (로컬 실행, 연도별 분할 처리)
 
-하는 일:
-    과거 공시를 전수 수집(DART) → 세부 유형 분리 → 각 공시일(T) 기준 T+1/T+5/T+20
-    영업일의 시장초과수익률을 pykrx 주가로 계산 → 유형별 평균·상승확률 집계 →
-    event_study_hist.json 으로 저장. 이 JSON을 대시보드가 통계로 사용합니다.
+사용법:
+    python event_study.py 2024            → 2024년만 수집·계산 (연도 조각 저장)
+    python event_study.py 2022 2023 2024  → 여러 해를 차례로 처리
+    python event_study.py                 → 이미 만들어진 모든 연도 조각을 합쳐 통계만 생성
 
-pykrx가 KRX/네이버를 스크래핑하므로 클라우드보다 '내 PC'에서 돌리는 것을 권장합니다.
-자주 바뀌는 값이 아니므로 한 달~분기에 한 번만 갱신해도 충분합니다.
+동작:
+    · 연도별로 _year_2024.csv 같은 조각 파일을 남깁니다. 이미 있으면 그 해는 건너뜁니다.
+    · 중간에 끊겨도 그 해의 진행분(_prog_2024.csv)부터 이어서 재개합니다.
+    · 마지막에 존재하는 모든 연도 조각을 합쳐 event_study_hist.json 을 만듭니다.
+      → 나중에 새 연도만 추가로 돌리면, 기존 연도는 재수집 없이 합산됩니다.
 
-설치: pip install requests pandas pykrx
+권장: 처음엔 1년(예: 2024)으로 완주해 결과를 확인한 뒤, 연도를 하나씩 늘리세요.
+      표본이 적은 유형(20건 미만)은 '표본부족'으로 표시됩니다.
+
+주의: 과거 통계는 미래를 보장하지 않습니다. 투자 자문이 아닙니다.
+설치: pip install requests pandas pykrx finance-datareader
 """
 import os
+import sys
+import glob
 import json
 import time
 from datetime import datetime, timedelta
@@ -20,9 +29,11 @@ import pandas as pd
 from pykrx import stock
 import dart_common as dc
 
-BGN_DE, END_DE = "20220101", "20251231"
 HORIZONS = [1, 5, 20]
 MIN_SAMPLE = 20
+YEAR_FILE = "_year_{}.csv"     # 연도별 결과 조각
+PROG_FILE = "_prog_{}.csv"     # 연도별 진행 중 저장
+DISC_FILE = "_disc_{}.csv"     # 연도별 공시 캐시
 
 def _date_chunks(bgn, end, months=3):
     """조회 기간을 DART 제한(전체조회 시 3개월)에 맞춰 나눔."""
@@ -37,9 +48,9 @@ def _date_chunks(bgn, end, months=3):
         s = chunk_end + timedelta(days=1)
     return out
 
-def fetch_disclosures():
+def fetch_disclosures(bgn_de, end_de):
     rows = []
-    chunks = _date_chunks(BGN_DE, END_DE)
+    chunks = _date_chunks(bgn_de, end_de)
     total_steps = len(chunks) * 2
     step = 0
     for corp_cls, market in (("Y", "KOSPI"), ("K", "KOSDAQ")):
@@ -88,10 +99,10 @@ def _prices(ticker, bgn, end):
         time.sleep(0.15)
     return _cache[k]
 
-def load_full_index():
-    """전체 기간 지수를 시장별로 한 번만 로드 (pykrx 실패 시 FinanceDataReader 대체)."""
-    lo = BGN_DE
-    hi = _shift(END_DE, 70)
+def load_full_index(bgn_de, end_de):
+    """해당 기간 지수를 시장별로 한 번만 로드 (FDR 우선, pykrx 대체)."""
+    lo = bgn_de
+    hi = _shift(end_de, 70)
     today = datetime.today().strftime("%Y%m%d")
     if hi > today:            # 미래 날짜 요청 방지
         hi = today
@@ -141,46 +152,49 @@ def excess_returns(row):
         out[h] = round((rs - ri) * 100, 4)
     return out
 
-def main():
-    if dc.API_KEY.startswith("여기에"):
-        print("오류: DART_API_KEY 환경변수가 설정되지 않았습니다.")
-        print("  Windows(cmd):  set DART_API_KEY=발급받은키   그다음 python event_study.py")
+def process_year(year):
+    """한 해를 수집·계산해 연도 조각(_year_YYYY.csv)을 만든다. 이미 있으면 건너뜀."""
+    yf = YEAR_FILE.format(year)
+    if os.path.exists(yf):
+        print(f"[{year}] 이미 완료된 연도 — 건너뜀 ({yf})")
         return
+    bgn, end = f"{year}0101", f"{year}1231"
+    today = datetime.today().strftime("%Y%m%d")
+    if end > today:
+        end = today
+    print(f"\n===== {year}년 처리 시작 ({bgn}~{end}) =====")
 
-    cache_file = f"_cache_disclosures_{BGN_DE}_{END_DE}.csv"
-    if os.path.exists(cache_file):
-        df = pd.read_csv(cache_file, dtype=str)
-        print(f"[1-2/3] 캐시 사용: {cache_file} ({len(df):,}건) — 수집·분류 건너뜀")
-        print(f"        (처음부터 다시 하려면 이 파일을 지우세요)")
+    # 1-2단계: 공시 수집 + 세부분리 (연도별 캐시)
+    dfile = DISC_FILE.format(year)
+    if os.path.exists(dfile):
+        df = pd.read_csv(dfile, dtype=str)
+        print(f"[1-2/3] {year} 공시 캐시 사용 ({len(df):,}건)")
     else:
-        print(f"[1/3] 공시 수집 ({BGN_DE}~{END_DE})")
-        df = fetch_disclosures()
+        print(f"[1/3] {year} 공시 수집")
+        df = fetch_disclosures(bgn, end)
         print(f"      {len(df):,}건")
         if df.empty:
-            print("수집된 공시가 0건입니다. 인증키가 올바른지, 조회 기간이 맞는지 확인하세요.")
+            print(f"      {year}년 수집 0건 — 건너뜀")
             return
+        print(f"[2/3] {year} 세부 방향 분리")
+        df = dc.refine(df, bgn, end)
+        df.to_csv(dfile, index=False, encoding="utf-8-sig")
+        print(f"      캐시 저장: {dfile}")
 
-        print("[2/3] 세부 방향 분리")
-        df = dc.refine(df, BGN_DE, END_DE)
-        df.to_csv(cache_file, index=False, encoding="utf-8-sig")
-        print(f"      캐시 저장: {cache_file} (다음 실행 때 재사용)")
-
-    print("[3/3] 주가 대조 & 집계 …")
-    print("  지수 로드 중…")
-    load_full_index()
-
-    prog_file = f"_cache_returns_{BGN_DE}_{END_DE}.csv"
-    done = {}
-    if os.path.exists(prog_file):
-        prev = pd.read_csv(prog_file)
+    # 3단계: 주가 대조 (진행분 이어서)
+    print(f"[3/3] {year} 주가 대조 …")
+    load_full_index(bgn, end)
+    pf = PROG_FILE.format(year)
+    if os.path.exists(pf):
+        prev = pd.read_csv(pf)
         recs = prev.to_dict("records")
         done = {r["_key"] for r in recs if "_key" in r}
-        print(f"  이전 진행분 {len(recs):,}건 이어서 진행 (처음부터 하려면 {prog_file} 삭제)")
+        print(f"  이전 진행분 {len(recs):,}건 이어서 진행")
     else:
-        recs = []
+        recs, done = [], set()
 
     total = len(df)
-    t_start = time.time()
+    t0 = time.time()
     for i, (_, row) in enumerate(df.iterrows(), 1):
         key = f"{row['ticker']}_{row['date']}_{row['sub']}"
         if key in done:
@@ -189,18 +203,33 @@ def main():
         if er:
             recs.append({"_key": key, "sub": row["sub"], **er})
         if i % 25 == 0:
-            el = time.time() - t_start
+            el = time.time() - t0
             rate = i / el if el > 0 else 0
             eta = (total - i) / rate / 60 if rate > 0 else 0
-            print(f"  진행 {i:,}/{total:,} ({i/total*100:.0f}%) · 남은 예상 {eta:.0f}분")
+            print(f"  {year} 진행 {i:,}/{total:,} ({i/total*100:.0f}%) · 남은 예상 {eta:.0f}분")
         if i % 100 == 0:
-            pd.DataFrame(recs).to_csv(prog_file, index=False, encoding="utf-8-sig")
-    pd.DataFrame(recs).to_csv(prog_file, index=False, encoding="utf-8-sig")
+            pd.DataFrame(recs).to_csv(pf, index=False, encoding="utf-8-sig")
 
-    res = pd.DataFrame(recs)
+    pd.DataFrame(recs).to_csv(yf, index=False, encoding="utf-8-sig")
+    if os.path.exists(pf):
+        os.remove(pf)
+    print(f"[{year}] 완료 → {yf} ({len(recs):,}건)")
+
+
+def build_hist():
+    """존재하는 모든 연도 조각을 합쳐 event_study_hist.json 생성."""
+    files = sorted(glob.glob(YEAR_FILE.format("*")))
+    if not files:
+        print("합칠 연도 조각이 없습니다. 먼저  python event_study.py 2024  처럼 실행하세요.")
+        return
+    frames = []
+    for f in files:
+        d = pd.read_csv(f)
+        frames.append(d)
+        print(f"  합산: {f} ({len(d):,}건)")
+    res = pd.concat(frames, ignore_index=True)
     if "_key" in res.columns:
-        res = res.drop(columns=["_key"])
-    # CSV 재로딩 시 컬럼명이 문자열이 되므로 정수 지평 키로 통일 + 숫자 변환
+        res = res.drop_duplicates(subset=["_key"]).drop(columns=["_key"])
     res = res.rename(columns={str(h): h for h in HORIZONS})
     for h in HORIZONS:
         if h in res.columns:
@@ -218,10 +247,24 @@ def main():
 
     with open("event_study_hist.json", "w", encoding="utf-8") as f:
         json.dump(hist, f, ensure_ascii=False, indent=2)
-    print("저장: event_study_hist.json")
-    for s, e in sorted(hist.items(), key=lambda x: (x[1]["t20"] or -99), reverse=True):
+    years = [os.path.basename(f).replace("_year_", "").replace(".csv", "") for f in files]
+    print(f"\n저장: event_study_hist.json  (합산 연도: {', '.join(years)} · 총 {len(res):,}건)")
+    print("\n=== 유형별 공시 후 초과수익 ===")
+    for s_, e in sorted(hist.items(), key=lambda x: (x[1]["t20"] if x[1]["t20"] is not None else -99), reverse=True):
         flag = " (표본부족)" if e["n"] < MIN_SAMPLE else ""
-        print(f"  {s:22s} n={e['n']:4d}  T+20={e['t20']}%  win={e['win']}%{flag}")
+        print(f"  {s_:22s} n={e['n']:5d}  T+20={e['t20']}%  win={e['win']}%{flag}")
+
+
+def main():
+    if dc.API_KEY.startswith("여기에"):
+        print("오류: DART_API_KEY 환경변수가 설정되지 않았습니다.")
+        print("  Windows(cmd):  set DART_API_KEY=발급받은키")
+        return
+    years = [a for a in sys.argv[1:] if a.isdigit()]
+    for y in years:
+        process_year(y)
+    build_hist()
+
 
 if __name__ == "__main__":
     main()

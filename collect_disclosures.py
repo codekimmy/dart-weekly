@@ -130,7 +130,7 @@ def collect():
         sector, cap = info.get(code, ("", None))
         out.append({
             "nm": r["nm"], "mk": r["mk"], "cat": r["cat"], "sub": r["sub"],
-            "ticker": code, "date": r["date"],
+            "ticker": code, "corp_code": r["corp_code"], "date": r["date"],
             "ev": r["report_nm"],
             "scale": (f"시총 {cap:,}억" if cap else ""),
             "sector": sector or "",
