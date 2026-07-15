@@ -80,25 +80,33 @@ def _prices(ticker, bgn, end):
 
 def load_full_index():
     """전체 기간 지수를 시장별로 한 번만 로드 (pykrx 실패 시 FinanceDataReader 대체)."""
-    lo, hi = BGN_DE, _shift(END_DE, 70)
+    lo = BGN_DE
+    hi = _shift(END_DE, 70)
+    today = datetime.today().strftime("%Y%m%d")
+    if hi > today:            # 미래 날짜 요청 방지
+        hi = today
+    lo_s = f"{lo[:4]}-{lo[4:6]}-{lo[6:]}"
+    hi_s = f"{hi[:4]}-{hi[4:6]}-{hi[6:]}"
     for market, code, fdr_code in (("KOSPI", "1001", "KS11"), ("KOSDAQ", "2001", "KQ11")):
         s = None
-        for attempt in range(3):
-            try:
-                s = stock.get_index_ohlcv_by_date(lo, hi, code)["종가"]
-                if s is not None and len(s):
-                    break
-            except Exception:
-                pass
-            time.sleep(2 * (attempt + 1))
+        # 1순위: FinanceDataReader (문자열 날짜 — 안정적)
+        try:
+            import FinanceDataReader as fdr
+            df = fdr.DataReader(fdr_code, lo_s, hi_s)
+            if df is not None and len(df):
+                s = df["Close"]
+        except Exception as e:
+            print(f"  (FDR {market} 실패: {e})")
+        # 2순위: pykrx
         if s is None or not len(s):
-            try:
-                import FinanceDataReader as fdr
-                s = fdr.DataReader(fdr_code,
-                                   datetime.strptime(lo, "%Y%m%d"),
-                                   datetime.strptime(hi, "%Y%m%d"))["Close"]
-            except Exception:
-                s = None
+            for attempt in range(2):
+                try:
+                    s = stock.get_index_ohlcv_by_date(lo, hi, code)["종가"]
+                    if s is not None and len(s):
+                        break
+                except Exception:
+                    pass
+                time.sleep(2)
         _IDX_FULL[market] = s
         ok = s is not None and len(s)
         print(f"  지수 로드 {market}: {'OK (' + str(len(s)) + '일)' if ok else '실패 → 초과수익 보정 없이 진행'}")
@@ -128,24 +136,55 @@ def main():
         print("오류: DART_API_KEY 환경변수가 설정되지 않았습니다.")
         print("  Windows(cmd):  set DART_API_KEY=발급받은키   그다음 python event_study.py")
         return
-    print(f"[1/3] 공시 수집 ({BGN_DE}~{END_DE})")
-    df = fetch_disclosures()
-    print(f"      {len(df):,}건")
-    if df.empty:
-        print("수집된 공시가 0건입니다. 인증키가 올바른지, 조회 기간이 맞는지 확인하세요.")
-        return
 
-    print("[2/3] 세부 방향 분리")
-    df = dc.refine(df, BGN_DE, END_DE)
+    cache_file = f"_cache_disclosures_{BGN_DE}_{END_DE}.csv"
+    if os.path.exists(cache_file):
+        df = pd.read_csv(cache_file, dtype=str)
+        print(f"[1-2/3] 캐시 사용: {cache_file} ({len(df):,}건) — 수집·분류 건너뜀")
+        print(f"        (처음부터 다시 하려면 이 파일을 지우세요)")
+    else:
+        print(f"[1/3] 공시 수집 ({BGN_DE}~{END_DE})")
+        df = fetch_disclosures()
+        print(f"      {len(df):,}건")
+        if df.empty:
+            print("수집된 공시가 0건입니다. 인증키가 올바른지, 조회 기간이 맞는지 확인하세요.")
+            return
+
+        print("[2/3] 세부 방향 분리")
+        df = dc.refine(df, BGN_DE, END_DE)
+        df.to_csv(cache_file, index=False, encoding="utf-8-sig")
+        print(f"      캐시 저장: {cache_file} (다음 실행 때 재사용)")
 
     print("[3/3] 주가 대조 & 집계 …")
     print("  지수 로드 중…")
     load_full_index()
-    recs = []
-    for _, row in df.iterrows():
+
+    prog_file = f"_cache_returns_{BGN_DE}_{END_DE}.csv"
+    done = {}
+    if os.path.exists(prog_file):
+        prev = pd.read_csv(prog_file)
+        recs = prev.to_dict("records")
+        done = {r["_key"] for r in recs if "_key" in r}
+        print(f"  이전 진행분 {len(recs):,}건 이어서 진행 (처음부터 하려면 {prog_file} 삭제)")
+    else:
+        recs = []
+
+    total = len(df)
+    for i, (_, row) in enumerate(df.iterrows(), 1):
+        key = f"{row['ticker']}_{row['date']}_{row['sub']}"
+        if key in done:
+            continue
         er = excess_returns(row)
-        if er: recs.append({"sub": row["sub"], **er})
+        if er:
+            recs.append({"_key": key, "sub": row["sub"], **er})
+        if i % 100 == 0:
+            print(f"  진행 {i:,}/{total:,}건 ({i/total*100:.0f}%)")
+            pd.DataFrame(recs).to_csv(prog_file, index=False, encoding="utf-8-sig")
+    pd.DataFrame(recs).to_csv(prog_file, index=False, encoding="utf-8-sig")
+
     res = pd.DataFrame(recs)
+    if "_key" in res.columns:
+        res = res.drop(columns=["_key"])
 
     hist = {}
     for sub, g in res.groupby("sub"):
