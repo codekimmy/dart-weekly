@@ -80,13 +80,54 @@
   table.bt td:first-child{text-align:left;font-family:var(--sans);font-weight:500}
   table.bt td .cat{font-size:10.5px;color:var(--faint);font-family:var(--mono);display:block}
   .up{color:var(--up)} .dn{color:var(--down)} .fl{color:var(--neutral)}
-  footer{border-top:1px solid var(--line);padding:22px 0 46px;font-size:12px;color:var(--muted);line-height:1.9}
+  footer{border-top:1px solid var(--line);padding:22px 0 24px;font-size:12px;color:var(--muted);line-height:1.9}
   footer code{font-family:var(--mono);font-size:11.5px;background:var(--neutral-bg);padding:1px 5px;border-radius:4px}
   .empty{text-align:center;color:var(--faint);font-size:13px;padding:40px 0}
+  .brandbar{background:var(--surface);border-top:1px solid var(--line-strong)}
+  .brandbar-inner{max-width:1160px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .bb-left{display:flex;align-items:baseline;gap:14px;min-width:0;flex-wrap:wrap}
+  .bb-logo{font-size:17px;font-weight:700;letter-spacing:-0.01em;color:var(--ink)}
+  .bb-tag{font-size:12.5px;color:var(--muted)}
+  .bb-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .bb-yt{display:inline-flex;align-items:center;gap:8px;background:var(--paper);border:1px solid var(--line-strong);border-radius:8px;padding:7px 13px;text-decoration:none;color:var(--ink);font-size:12.5px;font-family:var(--mono);transition:border-color .15s,background .15s}
+  .bb-yt:hover{border-color:var(--up);background:#FDF6F7}
+  .bb-meta{font-size:11.5px;color:var(--faint);font-family:var(--mono)}
+
+  .row-vol{grid-template-columns:200px 1fr 150px}
+  .row-trend{grid-template-columns:200px 1fr 210px}
+  .hist-right{text-align:right}
+
   @media(max-width:760px){
-    .row{grid-template-columns:1fr;gap:10px}
-    .hist{border-left:none;border-top:1px solid var(--line);padding-left:0;padding-top:10px}
+    .wrap{padding:0 14px}
+    .top-inner{padding:14px}
+    .brand h1{font-size:17px}
+    .row, .row-vol, .row-trend{grid-template-columns:1fr;gap:9px;padding:12px 14px}
+    .hist, .hist-right{border-left:none;border-top:1px solid var(--line);padding-left:0;padding-top:9px;text-align:left}
+    .hist .stats{gap:18px}
     .search{margin-left:0;width:100%}.search input{width:100%}
+    .toolbar{padding:10px 0 9px;gap:8px}
+    .chips{width:100%;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+    .chips::-webkit-scrollbar{display:none}
+    .sortsel{flex:1;min-width:0}
+    .metric-grid{grid-template-columns:repeat(2,1fr)}
+    .metric .val{font-size:22px}
+    .backtest{padding:16px 14px}
+    table.bt{font-size:11.5px}
+    table.bt th,table.bt td{padding:7px 5px}
+    .vtabs{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch}
+    .vtabs::-webkit-scrollbar{display:none}
+    .vtab{white-space:nowrap;flex:0 0 auto}
+    .disclaimer{font-size:11px;padding:6px 12px;line-height:1.5}
+    .brandbar-inner{padding:14px;flex-direction:column;align-items:flex-start;gap:11px}
+    .bb-left{flex-direction:column;gap:4px}
+    .bb-tag{font-size:11.5px;line-height:1.5}
+    .bb-right{width:100%;justify-content:space-between}
+    .bb-yt{font-size:11.5px;padding:6px 11px}
+    .bb-meta{font-size:10.5px}
+  }
+  @media(max-width:420px){
+    .metric-grid{grid-template-columns:1fr}
+    table.bt th:nth-child(3),table.bt td:nth-child(3){display:none}  /* 좁으면 T+1 숨김 */
   }
 </style>
 </head>
@@ -102,7 +143,7 @@
 </div></header>
 
 <div class="wrap">
-  <div style="display:flex;gap:8px;padding:16px 0 0">
+  <div class="vtabs" style="display:flex;gap:8px;padding:16px 0 0">
     <button class="vtab on" data-view="disc" style="font-family:var(--sans);font-size:13.5px;padding:7px 16px;border:1px solid var(--line-strong);border-radius:8px;background:var(--navy);color:#fff;cursor:pointer">공시 리포트</button>
     <button class="vtab" data-view="vol" style="font-family:var(--sans);font-size:13.5px;padding:7px 16px;border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);color:var(--muted);cursor:pointer">거래량 급증</button>
     <button class="vtab" data-view="trend" style="font-family:var(--sans);font-size:13.5px;padding:7px 16px;border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);color:var(--muted);cursor:pointer">추세·모멘텀</button>
@@ -169,6 +210,22 @@
   </footer>
 </div>
 
+<div class="brandbar">
+  <div class="brandbar-inner">
+    <div class="bb-left">
+      <span class="bb-logo">Ai365Lab</span>
+      <span class="bb-tag">Curiosity × Data × AI × Creation · Every day, a new experiment.</span>
+    </div>
+    <div class="bb-right">
+      <a class="bb-yt" href="https://youtube.com/@surisuriai" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path fill="#C4283C" d="M23 12s0-3.8-.5-5.6a2.9 2.9 0 0 0-2-2C18.7 4 12 4 12 4s-6.7 0-8.5.4a2.9 2.9 0 0 0-2 2C1 8.2 1 12 1 12s0 3.8.5 5.6a2.9 2.9 0 0 0 2 2C5.3 20 12 20 12 20s6.7 0 8.5-.4a2.9 2.9 0 0 0 2-2C23 15.8 23 12 23 12z"/><path fill="#fff" d="M10 15.5v-7l6 3.5-6 3.5z"/></svg>
+        <span>youtube.com/@surisuriai</span>
+      </a>
+      <span class="bb-meta">Ai365Lab · Lotto Pattern Lab</span>
+    </div>
+  </div>
+</div>
+
 <script>
 const CAT_COLOR={'주주환원':'#C4283C','실적·펀더멘털':'#1F5DA0','성장·투자':'#4A3EA8','지배구조·구조개편':'#9A5A1E','자금조달':'#996B10','지분변동':'#8A2E52'};
 const CAT_OF={'자기주식 취득':'주주환원','자기주식 소각':'주주환원','현금배당':'주주환원','무상증자':'주주환원','잠정실적':'실적·펀더멘털','손익구조 변동':'실적·펀더멘털','단일판매·공급계약':'성장·투자','시설투자·증설':'성장·투자','타법인 취득·M&A':'성장·투자','기술이전·라이선스':'성장·투자','합병':'지배구조·구조개편','분할':'지배구조·구조개편','최대주주 변경':'지배구조·구조개편','5% 대량보유 변동':'지분변동'};
@@ -192,10 +249,10 @@ function renderVolume(){
     const disc=r.has_disc?`<span class="dir u" title="이번 주 공시 있음">공시 있음</span>`:'';
     const cap=r.cap?`시총 ${r.cap.toLocaleString()}억`:'';
     const sec=r.sector?` · ${r.sector}`:'';
-    return `<div class="row" style="grid-template-columns:200px 1fr 150px">
+    return `<div class="row row-vol">
       <div class="co"><div class="nm">${r.nm}</div><div class="meta"><span class="mk">${r.ticker}</span><span style="font-family:var(--mono);font-size:11px;color:var(--faint)">${sec}</span></div></div>
       <div class="ev"><div class="txt"><span style="font-family:var(--mono);font-weight:600;color:var(--up)">거래량 ${r.mult}배</span> ${disc}</div><div class="scale">${cap} · 종가 ${r.close.toLocaleString()}원</div></div>
-      <div class="hist" style="text-align:right"><div class="st"><span class="k">당일 등락</span><span class="v up" style="font-size:18px">+${r.chg}%</span></div></div>
+      <div class="hist hist-right"><div class="st"><span class="k">당일 등락</span><span class="v up" style="font-size:18px">+${r.chg}%</span></div></div>
     </div>`;
   }).join('');
 }
@@ -216,7 +273,7 @@ function renderTrend(){
     const cap=r.cap?`시총 ${r.cap.toLocaleString()}억`:'';
     const sec=r.sector?` · ${r.sector}`:'';
     const finline=h?`<div class="winbar-lbl" style="margin-top:4px">매출 ${fmt(h.sales_growth)} · 영업익 ${fmt(h.op_growth)} · 부채 ${h.debt_ratio!=null?h.debt_ratio+'%':'—'}</div>`:'';
-    return `<div class="row" style="grid-template-columns:200px 1fr 210px">
+    return `<div class="row row-trend">
       <div class="co"><div class="nm">${r.nm}</div><div class="meta"><span class="mk">${r.ticker}</span><span style="font-family:var(--mono);font-size:11px;color:var(--faint)">${sec}</span></div></div>
       <div class="ev"><div class="txt">${r.ma200_above?'<span class="dir u">200일선 위</span>':''} ${hb} ${disc}</div><div class="scale">${cap}</div>${finline}</div>
       <div class="hist"><div class="stats">
@@ -306,7 +363,7 @@ function renderHighlights(){
   const el=document.getElementById('highlights');
   if(!scored.length){el.innerHTML='';return;}
   el.innerHTML=`<div style="margin:6px 0 2px;font-size:13px;color:var(--muted)">이번 주 주목</div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-bottom:6px">`+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:10px;margin-bottom:6px">`+
     scored.map(d=>{const h=d.hist||EMPTY_HIST; const rep=d.repeat>0?` · ↻${d.repeat}회`:'';
       const nm=d.link?`<a href="${d.link}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">${d.nm}</a>`:d.nm;
       return `<div style="background:var(--surface);border:0.5px solid var(--line);border-radius:11px;padding:11px 13px">
