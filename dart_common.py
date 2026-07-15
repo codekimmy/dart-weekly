@@ -108,25 +108,31 @@ def refine(df, bgn_de, end_de):
         return df
     df["sub"] = df["subtype"]
 
-    for corp_code, g in df[df.subtype == "유상증자"].groupby("corp_code"):
+    groups = list(df[df.subtype == "유상증자"].groupby("corp_code"))
+    for i, (corp_code, g) in enumerate(groups, 1):
         r = get("piicDecsn.json", corp_code=corp_code, bgn_de=bgn_de, end_de=end_de)
         book = {row.get("rcept_no"): row.get("ic_mthn", "")
                 for row in r.get("list", [])} if r.get("status") == "000" else {}
-        for i, rec in g.iterrows():
-            df.at[i, "sub"] = map_rights(book.get(rec["rcept_no"], ""))
+        for idx, rec in g.iterrows():
+            df.at[idx, "sub"] = map_rights(book.get(rec["rcept_no"], ""))
+        if i % 20 == 0 or i == len(groups):
+            print(f"    유상증자 배정방식 확인 {i}/{len(groups)}개사")
         time.sleep(0.2)
 
-    for corp_code, g in df[df.subtype == "임원·주요주주 소유변동"].groupby("corp_code"):
+    groups = list(df[df.subtype == "임원·주요주주 소유변동"].groupby("corp_code"))
+    for i, (corp_code, g) in enumerate(groups, 1):
         r = get("elestock.json", corp_code=corp_code)
         net = {}
         if r.get("status") == "000":
             for row in r.get("list", []):
                 rn = row.get("rcept_no")
                 net[rn] = net.get(rn, 0) + _to_int(row.get("sp_stock_lmp_irds_cnt"))
-        for i, rec in g.iterrows():
+        for idx, rec in g.iterrows():
             d = net.get(rec["rcept_no"])
-            df.at[i, "sub"] = ("임원·주요주주 매수" if (d or 0) > 0
-                               else "임원·주요주주 매도" if (d or 0) < 0
-                               else "임원·주요주주 소유변동")
+            df.at[idx, "sub"] = ("임원·주요주주 매수" if (d or 0) > 0
+                                 else "임원·주요주주 매도" if (d or 0) < 0
+                                 else "임원·주요주주 소유변동")
+        if i % 20 == 0 or i == len(groups):
+            print(f"    임원 매수/매도 확인 {i}/{len(groups)}개사")
         time.sleep(0.2)
     return df

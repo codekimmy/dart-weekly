@@ -39,9 +39,14 @@ def _date_chunks(bgn, end, months=3):
 
 def fetch_disclosures():
     rows = []
+    chunks = _date_chunks(BGN_DE, END_DE)
+    total_steps = len(chunks) * 2
+    step = 0
     for corp_cls, market in (("Y", "KOSPI"), ("K", "KOSDAQ")):
-        for bgn, end in _date_chunks(BGN_DE, END_DE):
+        for bgn, end in chunks:
+            step += 1
             page = 1
+            got = 0
             while True:
                 r = dc.get("list.json", bgn_de=bgn, end_de=end, corp_cls=corp_cls,
                            page_no=page, page_count=100)
@@ -49,6 +54,7 @@ def fetch_disclosures():
                     if r.get("status") not in ("013",):  # 013=데이터 없음(정상)
                         print(f"  [경고] {market} {bgn}~{end}: {r.get('status')} {r.get('message')}")
                     break
+                total_page = int(r.get("total_page", 1))
                 for it in r.get("list", []):
                     if not it.get("stock_code"):
                         continue
@@ -58,10 +64,14 @@ def fetch_disclosures():
                     rows.append({"rcept_no": it["rcept_no"], "corp_code": it["corp_code"],
                                  "date": it["rcept_dt"], "ticker": it["stock_code"],
                                  "market": market, "subtype": sub})
-                if page >= int(r.get("total_page", 1)):
+                    got += 1
+                if page % 20 == 0:
+                    print(f"    {market} {bgn[:6]}~{end[:6]}: {page}/{total_page}p (누적 {len(rows):,}건)")
+                if page >= total_page:
                     break
                 page += 1
                 time.sleep(0.25)
+            print(f"  [{step}/{total_steps}] {market} {bgn}~{end} 완료 · 이 구간 {got:,}건 (누적 {len(rows):,}건)")
     return pd.DataFrame(rows)
 
 _cache = {}
@@ -170,6 +180,7 @@ def main():
         recs = []
 
     total = len(df)
+    t_start = time.time()
     for i, (_, row) in enumerate(df.iterrows(), 1):
         key = f"{row['ticker']}_{row['date']}_{row['sub']}"
         if key in done:
@@ -177,8 +188,12 @@ def main():
         er = excess_returns(row)
         if er:
             recs.append({"_key": key, "sub": row["sub"], **er})
+        if i % 25 == 0:
+            el = time.time() - t_start
+            rate = i / el if el > 0 else 0
+            eta = (total - i) / rate / 60 if rate > 0 else 0
+            print(f"  진행 {i:,}/{total:,} ({i/total*100:.0f}%) · 남은 예상 {eta:.0f}분")
         if i % 100 == 0:
-            print(f"  진행 {i:,}/{total:,}건 ({i/total*100:.0f}%)")
             pd.DataFrame(recs).to_csv(prog_file, index=False, encoding="utf-8-sig")
     pd.DataFrame(recs).to_csv(prog_file, index=False, encoding="utf-8-sig")
 
