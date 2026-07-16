@@ -25,7 +25,8 @@ import pandas as pd
 import dart_common as dc
 
 LOOKBACK_DAYS = 7        # 이번 주 리포트 대상 기간
-REPEAT_WINDOW_DAYS = 90  # 연속·중복 공시를 따질 과거 기간 (DART 전체조회 한도 = 3개월)
+REPEAT_WINDOW_DAYS = 84  # 연속·중복 공시를 따질 과거 기간
+                         # (DART 전체조회 한도가 '3개월'이라 90일은 경계에 걸림 → 12주로 여유)
 
 
 def _risk_tickers():
@@ -72,8 +73,14 @@ def _fetch_range(bgn_de, end_de):
         while True:
             r = dc.get("list.json", bgn_de=bgn_de, end_de=end_de, corp_cls=corp_cls,
                        page_no=page, page_count=100)
-            if r.get("status") != "000":
+            status = r.get("status")
+            if status != "000":
+                # 013=데이터 없음(정상). 그 외는 원인을 드러냄(예: 100=3개월 한도 초과)
+                if status != "013":
+                    print(f"[경고] {market} {bgn_de}~{end_de} p{page}: "
+                          f"status={status} {r.get('message')}")
                 break
+            total_page = int(r.get("total_page", 1))
             for it in r.get("list", []):
                 code = it.get("stock_code")
                 if not code:
@@ -88,9 +95,10 @@ def _fetch_range(bgn_de, end_de):
                     "date": it["rcept_dt"], "ticker": code, "nm": it["corp_name"],
                     "mk": market, "subtype": sub, "report_nm": it["report_nm"],
                 })
-            if page >= int(r.get("total_page", 1)):
+            if page >= total_page:
                 break
             page += 1
+        print(f"  {market} 수집 완료 (누적 {len(rows):,}건)")
     return pd.DataFrame(rows), risk_event
 
 
