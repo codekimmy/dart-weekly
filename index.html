@@ -83,6 +83,14 @@
   footer{border-top:1px solid var(--line);padding:22px 0 24px;font-size:12px;color:var(--muted);line-height:1.9}
   footer code{font-family:var(--mono);font-size:11.5px;background:var(--neutral-bg);padding:1px 5px;border-radius:4px}
   .empty{text-align:center;color:var(--faint);font-size:13px;padding:40px 0}
+  .method{margin:0 0 16px;border:1px solid #E4D4A8;background:var(--caution-bg);border-radius:10px}
+  .method summary{list-style:none;cursor:pointer;padding:11px 14px;font-size:13px;font-weight:600;color:var(--caution);display:flex;align-items:center;gap:8px}
+  .method summary::-webkit-details-marker{display:none}
+  .method summary .chev{margin-left:auto;font-family:var(--mono);transition:transform .2s}
+  .method[open] summary .chev{transform:rotate(90deg)}
+  .method-body{padding:0 14px 13px;font-size:12.5px;color:#7A5610;line-height:1.85}
+  .method-body b{color:#5E420C}
+
   .brandbar{background:var(--surface);border-top:1px solid var(--line-strong)}
   .brandbar-inner{max-width:1160px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
   .bb-left{display:flex;align-items:baseline;gap:14px;min-width:0;flex-wrap:wrap}
@@ -118,6 +126,8 @@
     .vtabs::-webkit-scrollbar{display:none}
     .vtab{white-space:nowrap;flex:0 0 auto}
     .disclaimer{font-size:11px;padding:6px 12px;line-height:1.5}
+    .method summary{font-size:12.5px;padding:10px 12px}
+    .method-body{padding:0 12px 12px;font-size:12px;line-height:1.8}
     .brandbar-inner{padding:14px;flex-direction:column;align-items:flex-start;gap:11px}
     .bb-left{flex-direction:column;gap:4px}
     .bb-tag{font-size:11.5px;line-height:1.5}
@@ -132,7 +142,7 @@
 </style>
 </head>
 <body>
-<div class="disclaimer">과거 유사 공시의 <b>통계적 경향</b>이며 미래 수익을 보장하지 않습니다 · <b>투자 자문이 아닙니다</b></div>
+<div class="disclaimer">과거 유사 공시의 <b>통계적 경향</b>이며 미래 수익을 보장하지 않습니다 · 공시 유형은 <b>자동 분류라 오분류·누락이 있을 수 있습니다</b> · <b>투자 자문이 아닙니다</b></div>
 <header class="top"><div class="top-inner">
   <div class="brand"><h1>주간 공시 분석</h1><span class="sub" id="updated">DART · KRX WEEKLY</span></div>
   <div class="seg" id="mktseg">
@@ -174,6 +184,26 @@
   <section class="backtest">
     <h2>이벤트별 과거 주가 반응 (백테스트 참조표)</h2>
     <p class="bdesc">공시일(T) 기준 T+1 · T+5 · T+20 영업일 후 시장초과수익률의 과거 평균과 상승 확률입니다.</p>
+    <details class="method">
+      <summary>⚠ 이 수치의 한계 — 반드시 읽어주세요 <span class="chev">▸</span></summary>
+      <div class="method-body">
+        <b>분류가 완벽하지 않습니다.</b> 공시 유형은 보고서명(텍스트)을 규칙으로 자동 분류합니다.
+        DART 보고서명은 종류가 많고 형식도 제각각이라, 일부는 잘못 분류되거나 누락됩니다.
+        정정공시·자회사 공시·사후 보고 등이 섞여 같은 사건이 중복 계상되거나 반대로 빠질 수 있습니다.<br>
+
+        <b>같은 유형이어도 내용은 제각각입니다.</b> 예를 들어 '단일판매·공급계약' 하나에도 매출의 1%짜리와
+        100%짜리가 함께 들어 있습니다. 평균값은 이 차이를 지웁니다.<br>
+
+        <b>평균은 소수의 극단값에 좌우됩니다.</b> 평균이 플러스인데 상승확률이 절반 미만인 유형은,
+        '대체로 오른다'가 아니라 '가끔 크게 오르고 자주 조금 빠진다'는 뜻입니다.<br>
+
+        <b>표본과 기간의 한계.</b> 표본이 적은 유형(수십 건)은 우연에 크게 흔들립니다.
+        집계 기간의 시장 국면(상승장/하락장)도 결과에 그대로 배어 있어, 다른 시기엔 다르게 나옵니다.<br>
+
+        <b>따라서</b> 이 표는 <b>"어떤 공시를 더 눈여겨볼지" 우선순위를 잡는 참고자료</b>이지,
+        수익률 예측치가 아닙니다. 숫자를 그대로 기대수익으로 받아들이지 마세요.
+      </div>
+    </details>
     <table class="bt" id="bttable"><thead><tr><th>공시 유형</th><th>표본</th><th>T+1</th><th>T+5</th><th>T+20</th><th>상승확률</th></tr></thead><tbody></tbody></table>
   </section>
   </div>
@@ -306,7 +336,7 @@ function rowHTML(d){
     <div class="co"><div class="nm">${nm}</div><div class="meta"><span class="mk">${d.mk}</span>${sector}</div></div>
     <div class="ev"><span class="sub">${d.sub}</span><div class="txt">${d.ev}<span class="dir ${d.dir}">${DIRL[d.dir]||''}</span>${rep}</div><div class="scale">${scale}</div></div>
     <div class="hist">
-      <div class="htop"><span class="hlbl">공시 후 초과수익 (과거 평균)</span><span class="hn">${h.n}건</span></div>
+      <div class="htop"><span class="hlbl" title="자동 분류 기반이라 오분류·중복이 있을 수 있습니다. 예측치가 아닌 참고값입니다.">공시 후 초과수익 (과거 평균·참고용)</span><span class="hn">${h.n}건</span></div>
       <div class="stats">
         <div class="st"><span class="k">T+1</span><span class="v ${vcls(h.t1)}">${fmt(h.t1)}</span></div>
         <div class="st"><span class="k">T+5</span><span class="v ${vcls(h.t5)}">${fmt(h.t5)}</span></div>
