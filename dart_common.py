@@ -58,22 +58,28 @@ DIR_DEFAULT = {
     "잠정실적": "n", "손익구조 변동": "n",
     "단일판매·공급계약": "u", "시설투자·증설": "n", "타법인 취득·M&A": "c", "기술이전·라이선스": "u",
     "합병": "c", "분할": "d", "최대주주 변경": "c",
-    "유상증자(주주배정)": "d", "유상증자(제3자배정)": "c", "유상증자(일반공모)": "d", "유상증자(기타)": "c",
+    "유상증자": "d",
     "전환사채(CB)": "d", "신주인수권부사채(BW)": "d",
-    "5% 대량보유 변동": "u", "임원·주요주주 매수": "u", "임원·주요주주 매도": "d",
+    "5% 대량보유 변동": "n",
     "임원·주요주주 소유변동": "n",
     "사후공시(발행결과)": "n", "자회사 공시": "n",
 }
 
 # 제외/분리 규칙 (분류보다 먼저 적용)
-CORRECTION_PAT = r"\[(기재|첨부|권리|첨부서류|정정).*?정정.*?\]|\[정정\]"   # [기재정정] 등 정정공시
-POSTHOC_PAT    = r"발행결과|발행실적|실적보고|증권발행실적"                    # 사후 보고
-SUBSIDIARY_PAT = r"종속회사|자회사"                                            # 자회사 소식
+CORRECTION_PAT = r"^\["                    # [기재정정]/[첨부추가] 등 — 원본의 수정본이므로 제외
+POSTHOC_PAT    = r"발행결과|발행실적|실적보고|증권발행실적"      # 사후 보고
+SUBSIDIARY_PAT = r"종속회사|자회사"                            # 자회사 소식
+# 결정 이후의 절차·안내 공시 — 이벤트 스터디 대상이 아니므로 제외
+PROCEDURAL_PAT = (r"청약결과|발행가액|권리락|안내공시|특수관계인.*참여|"
+                  r"철회|취소|실권주.*청약|배정결과|납입완료|상장예정")
 
 def classify(report_nm: str):
     """보고서명 → 세부 유형. 정정공시는 제외(None), 자회사·사후공시는 별도 유형."""
-    # 1) 정정공시 제외 — 같은 건이 중복 계상되는 걸 막음 (원본만 사용)
+    # 1) 정정·첨부본 제외 — 같은 건이 중복 계상되는 걸 막음 (원본만 사용)
     if re.search(CORRECTION_PAT, report_nm):
+        return None
+    # 1-2) 결정 이후 절차·안내 공시 제외 (청약결과·발행가액·권리락 등)
+    if re.search(PROCEDURAL_PAT, report_nm):
         return None
     # 2) 사후 공시(발행결과·실적보고) 별도 분리 — 이미 알려진 정보
     if re.search(POSTHOC_PAT, report_nm):
@@ -119,38 +125,16 @@ def map_rights(ic_mthn: str):
     return "유상증자(기타)"
 
 def refine(df, bgn_de, end_de):
-    """유상증자 → 배정방식, 임원·주요주주 → 매수/매도 로 세분화한 'sub' 컬럼 생성."""
+    """세부 유형 컬럼 'sub' 생성.
+
+    과거에는 유상증자 배정방식(piicDecsn)과 임원 매수/매도(elestock)를 상세 API로
+    세분화했으나, 두 API 모두 해당 공시의 '일부만' 보유하고 있어 매칭에 실패한 건이
+    많았습니다. 판별된 건만 뽑으면 선택 편향이 생기므로 세분화를 하지 않습니다.
+    (배정방식·매수/매도는 대시보드의 DART 원문 링크로 개별 확인하세요.)
+    """
     df = df.copy()
     if df.empty or "subtype" not in df.columns:
         df["sub"] = []
         return df
     df["sub"] = df["subtype"]
-
-    groups = list(df[df.subtype == "유상증자"].groupby("corp_code"))
-    for i, (corp_code, g) in enumerate(groups, 1):
-        r = get("piicDecsn.json", corp_code=corp_code, bgn_de=bgn_de, end_de=end_de)
-        book = {row.get("rcept_no"): row.get("ic_mthn", "")
-                for row in r.get("list", [])} if r.get("status") == "000" else {}
-        for idx, rec in g.iterrows():
-            df.at[idx, "sub"] = map_rights(book.get(rec["rcept_no"], ""))
-        if i % 20 == 0 or i == len(groups):
-            print(f"    유상증자 배정방식 확인 {i}/{len(groups)}개사")
-        time.sleep(0.2)
-
-    groups = list(df[df.subtype == "임원·주요주주 소유변동"].groupby("corp_code"))
-    for i, (corp_code, g) in enumerate(groups, 1):
-        r = get("elestock.json", corp_code=corp_code)
-        net = {}
-        if r.get("status") == "000":
-            for row in r.get("list", []):
-                rn = row.get("rcept_no")
-                net[rn] = net.get(rn, 0) + _to_int(row.get("sp_stock_lmp_irds_cnt"))
-        for idx, rec in g.iterrows():
-            d = net.get(rec["rcept_no"])
-            df.at[idx, "sub"] = ("임원·주요주주 매수" if (d or 0) > 0
-                                 else "임원·주요주주 매도" if (d or 0) < 0
-                                 else "임원·주요주주 소유변동")
-        if i % 20 == 0 or i == len(groups):
-            print(f"    임원 매수/매도 확인 {i}/{len(groups)}개사")
-        time.sleep(0.2)
     return df
