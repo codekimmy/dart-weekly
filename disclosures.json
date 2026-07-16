@@ -1,18 +1,4 @@
 {
-  "updated": "2026-07-10",
-  "rows": [
-    {"nm": "한빛전자",   "mk": "KOSPI",  "cat": "주주환원",          "sub": "자기주식 취득",       "ticker":"005930","date":"20260707","ev": "자기주식취득결정",                 "scale": "시총 42,000억", "sector":"반도체",   "repeat":0, "dir": "u", "link":"https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260707000001"},
-    {"nm": "세림소재",   "mk": "KOSDAQ", "cat": "주주환원",          "sub": "자기주식 소각",       "ticker":"000660","date":"20260708","ev": "자기주식소각결정",                 "scale": "시총 3,100억",  "sector":"화학",     "repeat":0, "dir": "u", "link":"https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260708000002"},
-    {"nm": "대명화학",   "mk": "KOSPI",  "cat": "주주환원",          "sub": "현금배당",            "ticker":"051910","date":"20260707","ev": "현금ㆍ현물배당결정",               "scale": "시총 8,700억",  "sector":"화학",     "repeat":0, "dir": "n", "link":"https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260707000003"},
-    {"nm": "진성반도체", "mk": "KOSPI",  "cat": "실적·펀더멘털",     "sub": "잠정실적",            "ticker":"000270","date":"20260709","ev": "영업(잠정)실적(공정공시)",         "scale": "시총 15,000억", "sector":"반도체",   "repeat":0, "dir": "n", "link":"https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260709000004"},
-    {"nm": "그린일렉",   "mk": "KOSDAQ", "cat": "성장·투자",         "sub": "단일판매·공급계약",   "ticker":"373220","date":"20260708","ev": "단일판매ㆍ공급계약체결",           "scale": "시총 2,400억",  "sector":"2차전지",  "repeat":2, "dir": "u", "link":"https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260708000005"},
-    {"nm": "제일제약",   "mk": "KOSPI",  "cat": "성장·투자",         "sub": "기술이전·라이선스",   "ticker":"207940","date":"20260707","ev": "기술이전(라이선스아웃)계약",       "scale": "시총 6,200억",  "sector":"제약",     "repeat":0, "dir": "u", "link":"https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260707000006"},
-    {"nm": "케이산업",   "mk": "KOSDAQ", "cat": "지배구조·구조개편", "sub": "분할",                "ticker":"091990","date":"20260709","ev": "회사분할결정(물적분할)",           "scale": "시총 1,800억",  "sector":"기계",     "repeat":0, "dir": "d", "link":"https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260709000007"},
-    {"nm": "엠텍코리아", "mk": "KOSDAQ", "cat": "자금조달",          "sub": "유상증자(주주배정)",  "ticker":"095700","date":"20260708","ev": "유상증자결정",                     "scale": "시총 900억",    "sector":"IT부품",   "repeat":3, "dir": "d", "link":"https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260708000008"},
-    {"nm": "퓨처게임즈", "mk": "KOSDAQ", "cat": "자금조달",          "sub": "유상증자(제3자배정)", "ticker":"263750","date":"20260707","ev": "유상증자결정",                     "scale": "시총 1,200억",  "sector":"게임",     "repeat":0, "dir": "c", "link":"https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260707000009"},
-    {"nm": "모빌리티온", "mk": "KOSDAQ", "cat": "자금조달",          "sub": "전환사채(CB)",        "ticker":"293490","date":"20260709","ev": "전환사채권발행결정",               "scale": "시총 5,500억",  "sector":"플랫폼",   "repeat":1, "dir": "d", "link":"https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260709000010"},
-    {"nm": "셀바이오",   "mk": "KOSDAQ", "cat": "지분변동",          "sub": "임원·주요주주 매수",  "ticker":"196170","date":"20260708","ev": "임원ㆍ주요주주특정증권등소유상황보고서", "scale": "시총 4,100억", "sector":"바이오", "repeat":0, "dir": "u", "link":"https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260708000011"},
-    {"nm": "명진화학",   "mk": "KOSPI",  "cat": "지분변동",          "sub": "임원·주요주주 매도",  "ticker":"011170","date":"20260707","ev": "임원ㆍ주요주주특정증권등소유상황보고서", "scale": "시총 2,900억", "sector":"화학",   "repeat":0, "dir": "d", "link":"https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260707000012"},
-    {"nm": "광성전자",   "mk": "KOSPI",  "cat": "지분변동",          "sub": "5% 대량보유 변동",    "ticker":"009150","date":"20260708","ev": "주식등의대량보유상황보고서",       "scale": "시총 7,300억",  "sector":"전자부품", "repeat":0, "dir": "u", "link":"https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260708000013"}
-  ]
+  "updated": "2026-07-16",
+  "rows": []
 }
