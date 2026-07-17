@@ -134,11 +134,20 @@ def collect():
     # 업종·시총
     info = _sector_marcap()
 
+    # 같은 종목·같은 유형이 한 주에 여러 번이면 한 줄로 합침 (최신 건 대표, 건수 표기)
+    week = week.sort_values("date")
+    wk_count = week.groupby(["ticker", "sub"]).size().to_dict()
+    before = len(week)
+    week = week.drop_duplicates(subset=["ticker", "sub"], keep="last")
+    if before != len(week):
+        print(f"중복 정리: {before}건 → {len(week)}건 (같은 종목·유형 합침)")
+
     out = []
     for _, r in week.iterrows():
         code = r["ticker"]
         sector, cap = info.get(code, ("", None))
         out.append({
+            "wk": int(wk_count.get((code, r["sub"]), 1)),
             "nm": r["nm"], "mk": r["mk"], "cat": r["cat"], "sub": r["sub"],
             "ticker": code, "corp_code": r["corp_code"], "date": r["date"],
             "ev": r["report_nm"],

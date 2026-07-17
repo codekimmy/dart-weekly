@@ -118,6 +118,9 @@
   .st-warn{background:var(--caution-bg);color:var(--caution)}
   .st-bad{background:var(--down-bg);color:var(--down)}
   .st-na{background:var(--paper);color:var(--faint)}
+  .multibadge{font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--caution-bg);color:var(--caution);margin-left:5px;cursor:help}
+  .wkbadge{font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--neutral-bg);color:var(--neutral);margin-left:5px}
+
   .riskbox{border-radius:9px;padding:12px 14px;margin-bottom:14px}
   .rb-high{background:var(--down-bg);border:1px solid #C9D4E8}
   .rb-mid{background:var(--caution-bg);border:1px solid #E4D4A8}
@@ -566,13 +569,17 @@ function rowHTML(d){
   const scale=d.scale?`규모 · ${d.scale}`:'';
   const sector=d.sector?`<span style="font-family:var(--mono);font-size:11px;color:var(--faint)"> · ${d.sector}</span>`:'';
   const rep=(d.repeat&&d.repeat>0)?`<span class="dir c" title="최근 3개월 내 같은 유형 ${d.repeat}회">↻ ${d.repeat}회 반복</span>`:'';
+  const wk=(d.wk&&d.wk>1)?`<span class="wkbadge" title="이번 주에 같은 유형으로 ${d.wk}건 공시 — 최신 건만 표시">이번 주 ${d.wk}건</span>`:'';
+  const types=tickerTypes[d.ticker]||[];
+  const others=[...new Set(types)].filter(t=>t!==d.sub);
+  const multi=others.length?`<span class="multibadge" title="이 종목은 이번 주에 서로 다른 유형의 공시를 ${others.length+1}종 냈습니다: ${[d.sub,...others].join(', ')}">이 종목 ${others.length+1}종 공시</span>`:'';
   const nm=d.link?`<a href="${d.link}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--faint)">${d.nm}</a>`:d.nm;
   const a=d.actual||null;
   const actLine=a?`<div class="winbar-lbl" style="margin-top:6px">실제 ${['t1','t5','t20'].filter(k=>a[k]!=null).map(k=>k.toUpperCase()+' '+fmt(a[k])).join(' · ')||'집계 전'}</div>`
                  :`<div class="winbar-lbl" style="margin-top:6px;color:var(--faint)">실제 반응 집계 전</div>`;
   return `<div class="row">
     <div class="co"><div class="nm">${nm}</div><div class="meta"><span class="mk">${d.mk}</span>${sector}</div></div>
-    <div class="ev"><span class="sub">${d.sub}</span><div class="txt">${d.ev}<span class="dir ${d.dir}">${DIRL[d.dir]||''}</span>${rep}</div><div class="scale">${scale}</div></div>
+    <div class="ev"><span class="sub">${d.sub}</span><div class="txt">${d.ev}<span class="dir ${d.dir}">${DIRL[d.dir]||''}</span>${rep}${wk}${multi}</div><div class="scale">${scale}</div></div>
     <div class="hist">
       <div class="htop"><span class="hlbl" title="자동 분류 기반이라 오분류·중복이 있을 수 있습니다. 예측치가 아닌 참고값입니다.">공시 후 초과수익 (과거 평균·참고용)</span><span class="hn">${h.n}건</span></div>
       <div class="stats">
@@ -586,10 +593,14 @@ function rowHTML(d){
     </div></div>`;
 }
 
+let tickerTypes={};   // 종목 → 이번 주 공시 유형 목록 (같은 회사가 여러 줄 나오는 이유 표시용)
+
 function render(){
   let rows=data.filter(d=>(state.mkt==='all'||d.mk===state.mkt)&&(state.cat==='all'||d.cat===state.cat)&&(state.sector==='all'||d.sector===state.sector)&&(state.q===''||d.nm.includes(state.q)));
   const main=document.getElementById('main');
   if(!rows.length){main.innerHTML='<div class="empty">조건에 맞는 공시가 없습니다.</div>';return;}
+  tickerTypes={};
+  rows.forEach(r=>{(tickerTypes[r.ticker]=tickerTypes[r.ticker]||[]).push(r.sub);});
   if(state.sort==='cat'){
     const cats=[...new Set(rows.map(r=>r.cat))];
     main.innerHTML=cats.map(c=>{
