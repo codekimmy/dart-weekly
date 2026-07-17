@@ -91,6 +91,35 @@
   .method-body{padding:0 14px 13px;font-size:12.5px;color:#7A5610;line-height:1.85}
   .method-body b{color:#5E420C}
 
+  .finsearch{position:relative;margin-top:20px}
+  .finsearch input{width:100%;font-family:var(--sans);font-size:15px;padding:12px 15px;border:1px solid var(--line-strong);border-radius:10px;background:var(--surface);color:var(--ink);box-sizing:border-box}
+  .finsearch input:focus{outline:none;border-color:var(--navy)}
+  .finsug{position:absolute;top:100%;left:0;right:0;background:var(--surface);border:1px solid var(--line-strong);border-top:none;border-radius:0 0 10px 10px;max-height:280px;overflow-y:auto;z-index:20;display:none}
+  .finsug div{padding:9px 15px;font-size:13.5px;cursor:pointer;border-top:1px solid var(--line)}
+  .finsug div:hover{background:var(--paper)}
+  .finsug .sug-code{font-family:var(--mono);font-size:11px;color:var(--faint);margin-left:7px}
+  .fincard{background:var(--surface);border:0.5px solid var(--line);border-radius:12px;padding:20px 22px;margin-top:14px}
+  .finhead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:13px;margin-bottom:15px}
+  .finhead .fnm{font-size:19px;font-weight:700}
+  .finhead .fcode{font-family:var(--mono);font-size:12px;color:var(--faint)}
+  .grade{font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px;margin-left:auto}
+  .grade.good{background:var(--up-bg);color:var(--up)}
+  .grade.mid{background:var(--paper);color:var(--muted);border:1px solid var(--line-strong)}
+  .grade.bad{background:var(--caution-bg);color:var(--caution)}
+  .grade.none{background:var(--paper);color:var(--faint)}
+  .fingrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:11px}
+  .finitem{border:0.5px solid var(--line);border-radius:9px;padding:11px 13px}
+  .finitem .k{font-size:11.5px;color:var(--muted);margin-bottom:3px}
+  .finitem .v{font-family:var(--mono);font-size:19px;font-weight:600;display:flex;align-items:center;gap:8px}
+  .finitem .c{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.55}
+  .st-badge{font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:5px}
+  .st-good{background:var(--up-bg);color:var(--up)}
+  .st-mid{background:var(--paper);color:var(--muted)}
+  .st-warn{background:var(--caution-bg);color:var(--caution)}
+  .st-bad{background:var(--down-bg);color:var(--down)}
+  .st-na{background:var(--paper);color:var(--faint)}
+  .finraw{margin-top:14px;padding-top:13px;border-top:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.9}
+
   .brandbar{background:var(--surface);border-top:1px solid var(--line-strong)}
   .brandbar-inner{max-width:1160px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
   .bb-left{display:flex;align-items:baseline;gap:14px;min-width:0;flex-wrap:wrap}
@@ -127,6 +156,10 @@
     .vtab{white-space:nowrap;flex:0 0 auto}
     .disclaimer{font-size:11px;padding:6px 12px;line-height:1.5}
     .method summary{font-size:12.5px;padding:10px 12px}
+    .fingrid{grid-template-columns:1fr}
+    .fincard{padding:16px 14px}
+    .finhead .fnm{font-size:17px}
+    .grade{margin-left:0}
     .method-body{padding:0 12px 12px;font-size:12px;line-height:1.8}
     .brandbar-inner{padding:14px;flex-direction:column;align-items:flex-start;gap:11px}
     .bb-left{flex-direction:column;gap:4px}
@@ -157,6 +190,7 @@
     <button class="vtab on" data-view="disc" style="font-family:var(--sans);font-size:13.5px;padding:7px 16px;border:1px solid var(--line-strong);border-radius:8px;background:var(--navy);color:#fff;cursor:pointer">공시 리포트</button>
     <button class="vtab" data-view="vol" style="font-family:var(--sans);font-size:13.5px;padding:7px 16px;border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);color:var(--muted);cursor:pointer">거래량 급증</button>
     <button class="vtab" data-view="trend" style="font-family:var(--sans);font-size:13.5px;padding:7px 16px;border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);color:var(--muted);cursor:pointer">추세·모멘텀</button>
+    <button class="vtab" data-view="fin" style="font-family:var(--sans);font-size:13.5px;padding:7px 16px;border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);color:var(--muted);cursor:pointer">재무 분석</button>
   </div>
 
   <div id="disc-view">
@@ -252,6 +286,33 @@
     </div>
     <div class="rowcard" id="trend-list"></div>
   </div>
+
+  <div id="fin-view" style="display:none">
+    <div class="finsearch">
+      <input type="text" id="finq" placeholder="종목명 또는 종목코드 검색  (예: 삼성전자, 005930)" autocomplete="off">
+      <div id="finsug" class="finsug"></div>
+    </div>
+    <div id="fin-status" class="empty" style="margin-top:12px">종목을 검색하세요.</div>
+    <div id="fin-card"></div>
+    <details class="method" style="margin-top:14px">
+      <summary>⚠ 재무 분석의 한계 — 반드시 읽어주세요 <span class="chev">▸</span></summary>
+      <div class="method-body">
+        <b>과거 확정 실적입니다.</b> 최신 사업보고서(연 1회) 기준이라 최대 1년 이상 시차가 있습니다.
+        그 사이 회사 상황은 달라졌을 수 있습니다.<br>
+
+        <b>업종마다 적정 기준이 다릅니다.</b> 부채비율 200%는 제조업엔 부담이지만 금융·건설·리스업에선 정상입니다.
+        여기 쓰인 기준은 <b>일반적인 참고치</b>일 뿐이며, 같은 업종 내 비교가 훨씬 의미 있습니다.<br>
+
+        <b>숫자가 좋다고 주가가 오르지 않습니다.</b> 재무는 이미 공개된 정보라 주가에 반영돼 있습니다.
+        이 분석의 쓸모는 '오를 종목 찾기'가 아니라 <b>'피해야 할 부실을 거르기'</b>에 있습니다.<br>
+
+        <b>자동 계산이라 오류가 있을 수 있습니다.</b> 계정과목 이름이 회사마다 달라 일부는 잘못 잡히거나 누락됩니다.
+        중요한 판단 전에는 <b>DART 원문 재무제표를 직접 확인</b>하세요.<br>
+
+        <b>투자 자문이 아닙니다.</b> 최종 판단과 책임은 본인에게 있습니다.
+      </div>
+    </details>
+  </div>
   <footer>
     데이터: <code>disclosures.json</code>(주간 수집·Actions) + <code>event_study_hist.json</code>(백테스트·로컬)을 <code>sub</code> 유형으로 join. 색상은 한국 관례(빨강=상승/호재, 파랑=하락/악재)를 따른 방향성 태그이며 매매 신호가 아닙니다.
   </footer>
@@ -338,7 +399,102 @@ document.querySelectorAll('.vtab').forEach(b=>b.addEventListener('click',e=>{
   document.getElementById('disc-view').style.display  = v==='disc'?'':'none';
   document.getElementById('vol-view').style.display   = v==='vol'?'':'none';
   document.getElementById('trend-view').style.display = v==='trend'?'':'none';
+  document.getElementById('fin-view').style.display   = v==='fin'?'':'none';
+  if(v==='fin') loadFin();
 }));
+
+/* ── 재무 분석 ── */
+let finData=null, finLoading=false;
+const FIN_LABEL={sales_growth:'매출 성장률',op_margin:'영업이익률',net_margin:'순이익률',
+                 roe:'ROE (자기자본이익률)',debt_ratio:'부채비율',current_ratio:'유동비율'};
+const FIN_HINT={sales_growth:'전년 대비 매출 증감',op_margin:'매출에서 본업 이익이 남는 비율',
+                net_margin:'매출에서 최종 이익이 남는 비율',roe:'자기 자본으로 얼마를 벌었나',
+                debt_ratio:'자본 대비 부채 (낮을수록 안정)',current_ratio:'1년 내 갚을 빚 대비 현금화 가능 자산'};
+const ST_CLS={'양호':'st-good','보통':'st-mid','주의':'st-warn','위험':'st-bad','—':'st-na'};
+
+function eok(v){ if(v==null) return '—';
+  const a=Math.abs(v);
+  if(a>=1e12) return (v/1e12).toFixed(1)+'조';
+  if(a>=1e8)  return Math.round(v/1e8).toLocaleString()+'억';
+  return Math.round(v).toLocaleString();
+}
+function pct(v){ return v==null?'—':(v>0?'+':'')+v+'%'; }
+
+async function loadFin(){
+  if(finData||finLoading) return;
+  finLoading=true;
+  document.getElementById('fin-status').textContent='재무 데이터 불러오는 중…';
+  try{
+    finData=await (await fetch('finance_data.json')).json();
+    document.getElementById('fin-status').textContent=
+      `종목을 검색하세요. (${Object.keys(finData.companies).length.toLocaleString()}개 기업 · ${finData.year}년 사업보고서 기준)`;
+  }catch(e){
+    document.getElementById('fin-status').textContent=
+      '재무 데이터가 없습니다. 로컬에서 build_corp_map.py → finance_scan.py 를 실행해 finance_data.json 을 만드세요.';
+  }
+  finLoading=false;
+}
+
+function finSuggest(q){
+  const box=document.getElementById('finsug');
+  if(!finData||!q){ box.style.display='none'; return; }
+  const ql=q.toLowerCase();
+  const hits=Object.entries(finData.companies)
+    .filter(([code,v])=>v.nm.toLowerCase().includes(ql)||code.includes(q))
+    .slice(0,12);
+  if(!hits.length){ box.style.display='none'; return; }
+  box.innerHTML=hits.map(([code,v])=>
+    `<div data-code="${code}">${v.nm}<span class="sug-code">${code} · ${v.mk||''}</span></div>`).join('');
+  box.style.display='block';
+  box.querySelectorAll('div[data-code]').forEach(d=>d.addEventListener('click',()=>{
+    document.getElementById('finq').value=finData.companies[d.dataset.code].nm;
+    box.style.display='none';
+    showFin(d.dataset.code);
+  }));
+}
+
+function showFin(code){
+  const c=finData.companies[code];
+  if(!c) return;
+  const gcls=c.grade==='양호'?'good':c.grade==='주의 필요'?'bad':c.grade==='정보 부족'?'none':'mid';
+  const items=Object.keys(FIN_LABEL).map(k=>{
+    const e=c.eval[k]||{s:'—',c:''};
+    const val=(k==='sales_growth')?pct(c[k]):(c[k]==null?'—':c[k]+'%');
+    return `<div class="finitem">
+      <div class="k">${FIN_LABEL[k]} <span style="color:var(--faint)">· ${FIN_HINT[k]}</span></div>
+      <div class="v">${val}<span class="st-badge ${ST_CLS[e.s]||'st-na'}">${e.s}</span></div>
+      <div class="c">${e.c}</div>
+    </div>`;}).join('');
+  document.getElementById('fin-card').innerHTML=`
+    <div class="fincard">
+      <div class="finhead">
+        <span class="fnm">${c.nm}</span>
+        <span class="fcode">${code} · ${c.mk||''} · ${c.year}년 사업보고서</span>
+        <span class="grade ${gcls}">${c.grade}</span>
+      </div>
+      <div class="fingrid">${items}</div>
+      <div class="finraw">
+        매출액 ${eok(c.sales)} · 영업이익 ${eok(c.op)} · 당기순이익 ${eok(c.net)}<br>
+        자산총계 ${eok(c.assets)} · 부채총계 ${eok(c.debt)} · 자본총계 ${eok(c.equity)}
+        &nbsp;<a href="https://dart.fss.or.kr/dsab007/main.do?option=corp&textCrpNm=${encodeURIComponent(c.nm)}" target="_blank" rel="noopener" style="color:var(--navy)">DART 원문 →</a>
+      </div>
+    </div>`;
+  document.getElementById('fin-status').style.display='none';
+}
+
+document.getElementById('finq').addEventListener('input',e=>finSuggest(e.target.value.trim()));
+document.getElementById('finq').addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&finData){
+    const q=e.target.value.trim().toLowerCase();
+    const hit=Object.entries(finData.companies).find(([code,v])=>v.nm.toLowerCase()===q||code===q)
+           || Object.entries(finData.companies).find(([code,v])=>v.nm.toLowerCase().includes(q));
+    if(hit){ document.getElementById('finsug').style.display='none'; showFin(hit[0]); }
+  }
+});
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.finsearch')) document.getElementById('finsug').style.display='none';
+});
+
 
 function rowHTML(d){
   const h=d.hist||EMPTY_HIST;
