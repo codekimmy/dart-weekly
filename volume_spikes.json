@@ -1,14 +1,606 @@
 {
-  "date": "20260710",
-  "criteria": "거래량 3배+ · 상승",
+  "date": "20260716",
+  "criteria": "거래량 3.0배+ · 상승",
   "rows": [
-    {"ticker": "373220", "nm": "그린일렉",   "mult": 8.4, "chg": 14.2, "close": 42350, "cap": 2400,  "sector": "2차전지", "has_disc": true},
-    {"ticker": "196170", "nm": "셀바이오",   "mult": 6.1, "chg": 9.8,  "close": 88200, "cap": 4100,  "sector": "바이오",  "has_disc": true},
-    {"ticker": "263750", "nm": "퓨처게임즈", "mult": 5.7, "chg": 7.1,  "close": 15600, "cap": 1200,  "sector": "게임",    "has_disc": true},
-    {"ticker": "042700", "nm": "동성테크",   "mult": 5.2, "chg": 11.3, "close": 9870,  "cap": 1850,  "sector": "반도체",  "has_disc": false},
-    {"ticker": "115160", "nm": "우진소프트", "mult": 4.6, "chg": 5.4,  "close": 23400, "cap": 3300,  "sector": "SW",      "has_disc": false},
-    {"ticker": "950130", "nm": "한빛메디컬", "mult": 4.1, "chg": 6.7,  "close": 12050, "cap": 980,   "sector": "의료기기","has_disc": false},
-    {"ticker": "277810", "nm": "레드로버",   "mult": 3.8, "chg": 3.2,  "close": 5410,  "cap": 720,   "sector": "콘텐츠",  "has_disc": false},
-    {"ticker": "060310", "nm": "에스제이", "mult": 3.3, "chg": 4.9,  "close": 3120,  "cap": 640,   "sector": "IT부품",  "has_disc": false}
+    {
+      "ticker": "004540",
+      "nm": "깨끗한나라",
+      "mult": 79.9,
+      "chg": 26.54,
+      "close": 1907,
+      "cap": 710,
+      "sector": NaN,
+      "has_disc": false
+    },
+    {
+      "ticker": "024940",
+      "nm": "PN풍년",
+      "mult": 31.7,
+      "chg": 29.81,
+      "close": 2700,
+      "cap": 270,
+      "sector": "벤처기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "065950",
+      "nm": "웰크론",
+      "mult": 31.2,
+      "chg": 6.55,
+      "close": 1318,
+      "cap": 372,
+      "sector": "중견기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "248170",
+      "nm": "샘표식품",
+      "mult": 28.7,
+      "chg": 2.58,
+      "close": 23900,
+      "cap": 1091,
+      "sector": NaN,
+      "has_disc": false
+    },
+    {
+      "ticker": "277410",
+      "nm": "인산가",
+      "mult": 25.9,
+      "chg": 10.92,
+      "close": 6300,
+      "cap": 241,
+      "sector": "벤처기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "012690",
+      "nm": "모나리자",
+      "mult": 23.8,
+      "chg": 29.94,
+      "close": 2170,
+      "cap": 793,
+      "sector": NaN,
+      "has_disc": false
+    },
+    {
+      "ticker": "071950",
+      "nm": "코아스",
+      "mult": 22.8,
+      "chg": 29.27,
+      "close": 2760,
+      "cap": 343,
+      "sector": NaN,
+      "has_disc": false
+    },
+    {
+      "ticker": "002680",
+      "nm": "한탑",
+      "mult": 19.9,
+      "chg": 14.62,
+      "close": 2430,
+      "cap": 157,
+      "sector": "중견기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "026040",
+      "nm": "제이에스티나",
+      "mult": 16.1,
+      "chg": 5.19,
+      "close": 2130,
+      "cap": 351,
+      "sector": "중견기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "066910",
+      "nm": "손오공",
+      "mult": 14.9,
+      "chg": 29.98,
+      "close": 2285,
+      "cap": 305,
+      "sector": "중견기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "476060",
+      "nm": "온코닉테라퓨틱스",
+      "mult": 14.4,
+      "chg": 20.33,
+      "close": 14500,
+      "cap": 6584,
+      "sector": "기술성장기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "035620",
+      "nm": "바른손이앤에이",
+      "mult": 13.4,
+      "chg": 16.2,
+      "close": 796,
+      "cap": 148,
+      "sector": "중견기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "047920",
+      "nm": "HLB제약",
+      "mult": 13.1,
+      "chg": 9.21,
+      "close": 9370,
+      "cap": 3073,
+      "sector": "기술성장기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "072770",
+      "nm": "멤레이비티",
+      "mult": 12.7,
+      "chg": 30.0,
+      "close": 1053,
+      "cap": 437,
+      "sector": "중견기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "014990",
+      "nm": "인디에프",
+      "mult": 12.5,
+      "chg": 20.99,
+      "close": 2300,
+      "cap": 345,
+      "sector": NaN,
+      "has_disc": false
+    },
+    {
+      "ticker": "005360",
+      "nm": "모나미",
+      "mult": 12.4,
+      "chg": 8.27,
+      "close": 3730,
+      "cap": 704,
+      "sector": NaN,
+      "has_disc": false
+    },
+    {
+      "ticker": "004545",
+      "nm": "깨끗한나라우",
+      "mult": 12.2,
+      "chg": 4.91,
+      "close": 6200,
+      "cap": 22,
+      "sector": NaN,
+      "has_disc": false
+    },
+    {
+      "ticker": "011090",
+      "nm": "에넥스",
+      "mult": 9.9,
+      "chg": 29.95,
+      "close": 2755,
+      "cap": 326,
+      "sector": NaN,
+      "has_disc": false
+    },
+    {
+      "ticker": "291810",
+      "nm": "핀텔",
+      "mult": 9.7,
+      "chg": 16.36,
+      "close": 1501,
+      "cap": 170,
+      "sector": "기술성장기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "006660",
+      "nm": "삼성공조",
+      "mult": 9.2,
+      "chg": 17.07,
+      "close": 13580,
+      "cap": 1103,
+      "sector": NaN,
+      "has_disc": false
+    },
+    {
+      "ticker": "047770",
+      "nm": "코데즈컴바인",
+      "mult": 9.1,
+      "chg": 6.18,
+      "close": 2835,
+      "cap": 1072,
+      "sector": "중견기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "042110",
+      "nm": "에스씨디",
+      "mult": 8.9,
+      "chg": 6.01,
+      "close": 1306,
+      "cap": 631,
+      "sector": "우량기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "017180",
+      "nm": "명문제약",
+      "mult": 8.9,
+      "chg": 5.78,
+      "close": 1372,
+      "cap": 465,
+      "sector": NaN,
+      "has_disc": false
+    },
+    {
+      "ticker": "067630",
+      "nm": "HLB생명과학",
+      "mult": 7.6,
+      "chg": 2.37,
+      "close": 2380,
+      "cap": 2901,
+      "sector": "투자주의환기종목(소속부없음)",
+      "has_disc": false
+    },
+    {
+      "ticker": "285800",
+      "nm": "진영",
+      "mult": 7.4,
+      "chg": 29.96,
+      "close": 1093,
+      "cap": 191,
+      "sector": "벤처기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "084870",
+      "nm": "TBH글로벌",
+      "mult": 7.4,
+      "chg": 5.85,
+      "close": 2080,
+      "cap": 425,
+      "sector": NaN,
+      "has_disc": false
+    },
+    {
+      "ticker": "060230",
+      "nm": "제이케이시냅스",
+      "mult": 6.9,
+      "chg": 24.6,
+      "close": 1165,
+      "cap": 131,
+      "sector": "중견기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "260660",
+      "nm": "알리코제약",
+      "mult": 6.8,
+      "chg": 1.05,
+      "close": 2395,
+      "cap": 367,
+      "sector": "중견기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "413630",
+      "nm": "씨피시스템",
+      "mult": 6.6,
+      "chg": 12.37,
+      "close": 3360,
+      "cap": 1224,
+      "sector": "벤처기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "015260",
+      "nm": "에이엔피",
+      "mult": 6.4,
+      "chg": 29.85,
+      "close": 435,
+      "cap": 204,
+      "sector": NaN,
+      "has_disc": false
+    },
+    {
+      "ticker": "179290",
+      "nm": "엠아이텍",
+      "mult": 6.1,
+      "chg": 7.11,
+      "close": 4820,
+      "cap": 1560,
+      "sector": "우량기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "024950",
+      "nm": "삼천리자전거",
+      "mult": 6.1,
+      "chg": 5.14,
+      "close": 3480,
+      "cap": 431,
+      "sector": "중견기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "014130",
+      "nm": "한익스프레스",
+      "mult": 6.1,
+      "chg": 10.14,
+      "close": 2445,
+      "cap": 293,
+      "sector": NaN,
+      "has_disc": false
+    },
+    {
+      "ticker": "406820",
+      "nm": "뷰티스킨",
+      "mult": 5.9,
+      "chg": 13.97,
+      "close": 2015,
+      "cap": 284,
+      "sector": "벤처기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "033340",
+      "nm": "좋은사람들",
+      "mult": 5.8,
+      "chg": 29.9,
+      "close": 530,
+      "cap": 513,
+      "sector": "중견기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "101680",
+      "nm": "한국정밀기계",
+      "mult": 5.8,
+      "chg": 8.9,
+      "close": 2385,
+      "cap": 200,
+      "sector": "중견기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "279570",
+      "nm": "케이뱅크",
+      "mult": 5.6,
+      "chg": 11.13,
+      "close": 6390,
+      "cap": 25923,
+      "sector": NaN,
+      "has_disc": false
+    },
+    {
+      "ticker": "487580",
+      "nm": "폴레드",
+      "mult": 5.5,
+      "chg": 19.94,
+      "close": 3970,
+      "cap": 999,
+      "sector": "벤처기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "004310",
+      "nm": "현대약품",
+      "mult": 5.1,
+      "chg": 13.26,
+      "close": 7600,
+      "cap": 2432,
+      "sector": NaN,
+      "has_disc": false
+    },
+    {
+      "ticker": "460930",
+      "nm": "현대힘스",
+      "mult": 4.6,
+      "chg": 8.49,
+      "close": 12140,
+      "cap": 4310,
+      "sector": "우량기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "046310",
+      "nm": "백금T&A",
+      "mult": 4.2,
+      "chg": 3.47,
+      "close": 2385,
+      "cap": 391,
+      "sector": "우량기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "006090",
+      "nm": "사조오양",
+      "mult": 4.2,
+      "chg": 2.53,
+      "close": 8510,
+      "cap": 801,
+      "sector": NaN,
+      "has_disc": false
+    },
+    {
+      "ticker": "317870",
+      "nm": "엔바이오니아",
+      "mult": 4.2,
+      "chg": 4.44,
+      "close": 3995,
+      "cap": 353,
+      "sector": "기술성장기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "084440",
+      "nm": "유비온",
+      "mult": 4.2,
+      "chg": 8.32,
+      "close": 963,
+      "cap": 184,
+      "sector": "기술성장기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "089150",
+      "nm": "케이씨티",
+      "mult": 4.1,
+      "chg": 0.42,
+      "close": 1893,
+      "cap": 324,
+      "sector": "벤처기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "381620",
+      "nm": "제닉스로보틱스",
+      "mult": 4.0,
+      "chg": 5.58,
+      "close": 5680,
+      "cap": 745,
+      "sector": "중견기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "035610",
+      "nm": "솔본",
+      "mult": 4.0,
+      "chg": 6.08,
+      "close": 4795,
+      "cap": 1311,
+      "sector": "투자주의환기종목(소속부없음)",
+      "has_disc": false
+    },
+    {
+      "ticker": "089860",
+      "nm": "롯데렌탈",
+      "mult": 3.9,
+      "chg": 8.09,
+      "close": 36750,
+      "cap": 13343,
+      "sector": NaN,
+      "has_disc": false
+    },
+    {
+      "ticker": "348370",
+      "nm": "엔켐",
+      "mult": 3.7,
+      "chg": 9.58,
+      "close": 23450,
+      "cap": 5138,
+      "sector": "중견기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "006370",
+      "nm": "대구백화점",
+      "mult": 3.7,
+      "chg": 5.96,
+      "close": 5870,
+      "cap": 635,
+      "sector": NaN,
+      "has_disc": false
+    },
+    {
+      "ticker": "038620",
+      "nm": "위즈코프",
+      "mult": 3.7,
+      "chg": 0.5,
+      "close": 2025,
+      "cap": 306,
+      "sector": "벤처기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "473050",
+      "nm": "유안타제15호스팩",
+      "mult": 3.7,
+      "chg": 0.24,
+      "close": 2085,
+      "cap": 146,
+      "sector": "SPAC(소속부없음)",
+      "has_disc": false
+    },
+    {
+      "ticker": "439090",
+      "nm": "마녀공장",
+      "mult": 3.6,
+      "chg": 4.28,
+      "close": 17290,
+      "cap": 2834,
+      "sector": "우량기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "096770",
+      "nm": "SK이노베이션",
+      "mult": 3.5,
+      "chg": 3.76,
+      "close": 121400,
+      "cap": 205230,
+      "sector": NaN,
+      "has_disc": false
+    },
+    {
+      "ticker": "028300",
+      "nm": "HLB",
+      "mult": 3.5,
+      "chg": 1.73,
+      "close": 35300,
+      "cap": 47018,
+      "sector": "중견기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "037070",
+      "nm": "파세코",
+      "mult": 3.5,
+      "chg": 0.25,
+      "close": 8030,
+      "cap": 1606,
+      "sector": "중견기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "023790",
+      "nm": "동일스틸럭스",
+      "mult": 3.5,
+      "chg": 29.97,
+      "close": 1583,
+      "cap": 206,
+      "sector": "중견기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "040420",
+      "nm": "정상제이엘에스",
+      "mult": 3.5,
+      "chg": 0.35,
+      "close": 5770,
+      "cap": 904,
+      "sector": "우량기업부",
+      "has_disc": false
+    },
+    {
+      "ticker": "000050",
+      "nm": "경방",
+      "mult": 3.4,
+      "chg": 2.91,
+      "close": 8480,
+      "cap": 2324,
+      "sector": NaN,
+      "has_disc": false
+    },
+    {
+      "ticker": "271980",
+      "nm": "제일약품",
+      "mult": 3.4,
+      "chg": 4.0,
+      "close": 10390,
+      "cap": 1527,
+      "sector": NaN,
+      "has_disc": false
+    }
   ]
 }
