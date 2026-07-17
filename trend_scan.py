@@ -120,6 +120,7 @@ def scan(base_date=None):
         cap = row.get("Marcap")
         out.append({
             "ticker": code, "nm": row["Name"],
+            "mk": ("KOSPI" if str(row.get("Market", "")).startswith("KOSPI") else "KOSDAQ"),
             "ma200_above": ma200_above, "pos_52w": pos_52w, "rs_6m": rs_6m,
             "cap": int(cap / 1e8) if pd.notna(cap) and cap else None,
             "sector": sectors.get(code, ""),

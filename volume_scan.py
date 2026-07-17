@@ -99,6 +99,7 @@ def scan(base_date=None):
             spikes.append({
                 "ticker": code,
                 "nm": row["Name"],
+                "mk": ("KOSPI" if str(row.get("Market", "")).startswith("KOSPI") else "KOSDAQ"),
                 "mult": round(float(mult), 1),
                 "chg": round(float(row["ChagesRatio"]), 2),
                 "close": int(row["Close"]),

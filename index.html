@@ -369,8 +369,12 @@ const fmt=v=>v==null?'—':((v>0?'+':'')+v.toFixed(1)+'%');
 const vcls=v=>v==null?'fl':(v>0.3?'up':(v<-0.3?'dn':'fl'));
 let data=[], hist={}, vol={rows:[]}, trend={rows:[]}, health={}, state={mkt:'all',cat:'all',sector:'all',sort:'cat',q:''};
 
+function renderAll(){ render(); renderVolume(); renderTrend(); }
+
 function renderVolume(){
-  const rows=vol.rows||[];
+  const rows=(vol.rows||[]).filter(r=>
+    (state.mkt==='all'||r.mk===state.mkt)&&
+    (state.sector==='all'||r.sector===state.sector));
   const withDisc=rows.filter(r=>r.has_disc).length;
   document.getElementById('vol-metrics').innerHTML=`
     <div class="metric"><div class="lbl">급증 종목</div><div class="val u">${rows.length}</div><div class="foot">${vol.date||''} 기준</div></div>
@@ -391,7 +395,9 @@ function renderVolume(){
 }
 
 function renderTrend(){
-  const rows=trend.rows||[];
+  const rows=(trend.rows||[]).filter(r=>
+    (state.mkt==='all'||r.mk===state.mkt)&&
+    (state.sector==='all'||r.sector===state.sector));
   const healthy=rows.filter(r=>health[r.ticker] && health[r.ticker].healthy).length;
   document.getElementById('trend-metrics').innerHTML=`
     <div class="metric"><div class="lbl">추세 상위 종목</div><div class="val u">${rows.length}</div><div class="foot">${trend.date||''} 기준</div></div>
@@ -633,7 +639,7 @@ function renderBT(){
      <td class="${vcls(h.t20)}">${fmt(h.t20)}</td><td>${h.win==null?'—':h.win+'%'}</td></tr>`).join('');
 }
 
-document.getElementById('mktseg').addEventListener('click',e=>{if(!e.target.dataset.mkt)return;[...e.currentTarget.children].forEach(b=>b.classList.remove('on'));e.target.classList.add('on');state.mkt=e.target.dataset.mkt;render();});
+document.getElementById('mktseg').addEventListener('click',e=>{if(!e.target.dataset.mkt)return;[...e.currentTarget.children].forEach(b=>b.classList.remove('on'));e.target.classList.add('on');state.mkt=e.target.dataset.mkt;renderAll();});
 document.getElementById('catchips').addEventListener('click',e=>{if(!e.target.dataset.cat)return;[...e.currentTarget.children].forEach(b=>b.classList.remove('on'));e.target.classList.add('on');state.cat=e.target.dataset.cat;render();});
 function renderHighlights(){
   const scored=data.map(d=>({d, s:((d.hist||EMPTY_HIST).win||0) + (d.repeat>0&&(d.dir==='d')?12:0)}))
@@ -653,7 +659,7 @@ function renderHighlights(){
     }).join('')+`</div>`;
 }
 
-document.getElementById('sectorsel').addEventListener('change',e=>{state.sector=e.target.value;render();});
+document.getElementById('sectorsel').addEventListener('change',e=>{state.sector=e.target.value;renderAll();});
 document.getElementById('sortsel').addEventListener('change',e=>{state.sort=e.target.value;render();});
 document.getElementById('search').addEventListener('input',e=>{state.q=e.target.value.trim();render();});
 
@@ -667,7 +673,9 @@ async function boot(){
     const rows=disc.rows||disc;
     data=rows.map(r=>({...r,cat:r.cat||catOfSub(r.sub),hist:hist[r.sub]||EMPTY_HIST}));
     if(disc.updated)document.getElementById('updated').textContent='업데이트 '+disc.updated;
-    const secs=[...new Set(data.map(d=>d.sector).filter(Boolean))].sort();
+    const secs=[...new Set([...data.map(d=>d.sector),
+                           ...(vol.rows||[]).map(r=>r.sector),
+                           ...(trend.rows||[]).map(r=>r.sector)].filter(Boolean))].sort();
     document.getElementById('sectorsel').innerHTML='<option value="all">전체 업종</option>'+secs.map(s=>`<option value="${s}">${s}</option>`).join('');
     renderMetrics();renderHighlights();render();renderBT();renderVolume();renderTrend();
   }catch(e){
