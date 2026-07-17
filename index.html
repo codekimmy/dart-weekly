@@ -118,6 +118,24 @@
   .st-warn{background:var(--caution-bg);color:var(--caution)}
   .st-bad{background:var(--down-bg);color:var(--down)}
   .st-na{background:var(--paper);color:var(--faint)}
+  .riskbox{border-radius:9px;padding:12px 14px;margin-bottom:14px}
+  .rb-high{background:var(--down-bg);border:1px solid #C9D4E8}
+  .rb-mid{background:var(--caution-bg);border:1px solid #E4D4A8}
+  .rb-title{font-size:13px;font-weight:700;margin-bottom:8px}
+  .rb-high .rb-title{color:var(--down)}
+  .rb-mid .rb-title{color:var(--caution)}
+  .rb-item{font-size:12.5px;line-height:1.75;margin-bottom:5px;color:var(--ink)}
+  .rb-note{font-size:11px;color:var(--muted);line-height:1.65;margin-top:8px;padding-top:8px;border-top:1px solid rgba(0,0,0,.07)}
+  .rb-note a{color:var(--navy)}
+
+  .fintrend{margin-top:14px;padding-top:13px;border-top:1px solid var(--line)}
+  .ft-title{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px}
+  table.ft{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12.5px}
+  table.ft th{text-align:left;font-weight:500;color:var(--muted);padding:6px 8px;font-family:var(--sans);font-size:12px}
+  table.ft thead td{color:var(--faint);font-size:11.5px;padding:4px 8px;text-align:right}
+  table.ft td{text-align:right;padding:6px 8px;border-top:1px solid var(--line)}
+  .ft-note{font-size:11.5px;color:var(--caution);margin-top:8px}
+
   .finraw{margin-top:14px;padding-top:13px;border-top:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.9}
 
   .brandbar{background:var(--surface);border-top:1px solid var(--line-strong)}
@@ -157,6 +175,10 @@
     .disclaimer{font-size:11px;padding:6px 12px;line-height:1.5}
     .method summary{font-size:12.5px;padding:10px 12px}
     .fingrid{grid-template-columns:1fr}
+    .riskbox{padding:11px 12px}
+    .rb-item{font-size:12px}
+    table.ft{font-size:11.5px}
+    table.ft th,table.ft td{padding:5px 4px}
     .fincard{padding:16px 14px}
     .finhead .fnm{font-size:17px}
     .grade{margin-left:0}
@@ -406,10 +428,13 @@ document.querySelectorAll('.vtab').forEach(b=>b.addEventListener('click',e=>{
 /* ── 재무 분석 ── */
 let finData=null, finLoading=false;
 const FIN_LABEL={sales_growth:'매출 성장률',op_margin:'영업이익률',net_margin:'순이익률',
-                 roe:'ROE (자기자본이익률)',debt_ratio:'부채비율',current_ratio:'유동비율'};
+                 roe:'ROE (자기자본이익률)',debt_ratio:'부채비율',current_ratio:'유동비율',
+                 ocf:'영업활동현금흐름',per:'PER',pbr:'PBR'};
 const FIN_HINT={sales_growth:'전년 대비 매출 증감',op_margin:'매출에서 본업 이익이 남는 비율',
                 net_margin:'매출에서 최종 이익이 남는 비율',roe:'자기 자본으로 얼마를 벌었나',
-                debt_ratio:'자본 대비 부채 (낮을수록 안정)',current_ratio:'1년 내 갚을 빚 대비 현금화 가능 자산'};
+                debt_ratio:'자본 대비 부채 (낮을수록 안정)',current_ratio:'1년 내 갚을 빚 대비 현금화 가능 자산',
+                ocf:'이익이 실제 현금으로 들어오나 (이익의 질)',per:'시가총액 ÷ 순이익 (이익 대비 주가)',
+                pbr:'시가총액 ÷ 자본총계 (순자산 대비 주가)'};
 const ST_CLS={'양호':'st-good','보통':'st-mid','주의':'st-warn','위험':'st-bad','—':'st-na'};
 
 function eok(v){ if(v==null) return '—';
@@ -456,23 +481,63 @@ function finSuggest(q){
 function showFin(code){
   const c=finData.companies[code];
   if(!c) return;
-  const gcls=c.grade==='양호'?'good':c.grade==='주의 필요'?'bad':c.grade==='정보 부족'?'none':'mid';
-  const items=Object.keys(FIN_LABEL).map(k=>{
-    const e=c.eval[k]||{s:'—',c:''};
-    const val=(k==='sales_growth')?pct(c[k]):(c[k]==null?'—':c[k]+'%');
+  const gcls=c.grade==='양호'?'good':(c.grade==='주의 필요'||c.grade==='상장폐지 위험')?'bad':c.grade==='정보 부족'?'none':'mid';
+
+  /* 상장폐지 위험 배너 */
+  let riskHtml='';
+  if(c.risks&&c.risks.length){
+    const hasHigh=c.risks.some(r=>r.lv==='위험');
+    riskHtml=`<div class="riskbox ${hasHigh?'rb-high':'rb-mid'}">
+      <div class="rb-title">${hasHigh?'⚠ 상장폐지 위험 신호':'⚠ 주의 신호'} · ${c.risks.length}건</div>
+      ${c.risks.map(r=>`<div class="rb-item"><span class="st-badge ${r.lv==='위험'?'st-bad':'st-warn'}">${r.lv}</span> <b>${r.t}</b> — ${r.d}</div>`).join('')}
+      <div class="rb-note">2026.7.1 시행된 강화 요건으로 계산한 <b>참고용 추정</b>입니다. 기간 요건(연속 거래일 수)은 반영되지 않았고,
+        실제 지정은 거래소가 유예·심사를 거쳐 결정합니다. 반드시 <a href="https://kind.krx.co.kr" target="_blank" rel="noopener">KIND</a>에서 확인하세요.</div>
+    </div>`;
+  }
+
+  /* 지표 카드 */
+  const order=['sales_growth','op_margin','net_margin','roe','debt_ratio','current_ratio','ocf','per','pbr'];
+  const items=order.filter(k=>c.eval&&c.eval[k]).map(k=>{
+    const e=c.eval[k];
+    let val;
+    if(k==='sales_growth')      val=pct(c[k]);
+    else if(k==='ocf')          val=eok(c.ocf);
+    else if(k==='per')          val=(c.per==null?'—':c.per+'배');
+    else if(k==='pbr')          val=(c.pbr==null?'—':c.pbr+'배');
+    else                        val=(c[k]==null?'—':c[k]+'%');
     return `<div class="finitem">
       <div class="k">${FIN_LABEL[k]} <span style="color:var(--faint)">· ${FIN_HINT[k]}</span></div>
       <div class="v">${val}<span class="st-badge ${ST_CLS[e.s]||'st-na'}">${e.s}</span></div>
       <div class="c">${e.c}</div>
     </div>`;}).join('');
+
+  /* 3년 추이 */
+  let trendHtml='';
+  if(c.trend){
+    const yr=parseInt(c.year,10);
+    const years=[yr-2,yr-1,yr];
+    const row=(label,arr)=>{
+      const cells=arr.map(v=>`<td>${eok(v)}</td>`).join('');
+      return `<tr><th>${label}</th>${cells}</tr>`;
+    };
+    trendHtml=`<div class="fintrend">
+      <div class="ft-title">3년 추이</div>
+      <table class="ft"><thead><tr><th></th>${years.map(y=>`<td>${y}</td>`).join('')}</tr></thead>
+      <tbody>${row('매출액',c.trend.sales)}${row('영업이익',c.trend.op)}${row('당기순이익',c.trend.net)}</tbody></table>
+      ${c.op_loss_years>=2?`<div class="ft-note">최근 3년 중 <b>${c.op_loss_years}개 연도</b>가 영업손실입니다.</div>`:''}
+    </div>`;
+  }
+
   document.getElementById('fin-card').innerHTML=`
     <div class="fincard">
       <div class="finhead">
         <span class="fnm">${c.nm}</span>
-        <span class="fcode">${code} · ${c.mk||''} · ${c.year}년 사업보고서</span>
+        <span class="fcode">${code} · ${c.mk||''} · ${c.year}년 사업보고서${c.mcap?' · 시총 '+eok(c.mcap):''}</span>
         <span class="grade ${gcls}">${c.grade}</span>
       </div>
+      ${riskHtml}
       <div class="fingrid">${items}</div>
+      ${trendHtml}
       <div class="finraw">
         매출액 ${eok(c.sales)} · 영업이익 ${eok(c.op)} · 당기순이익 ${eok(c.net)}<br>
         자산총계 ${eok(c.assets)} · 부채총계 ${eok(c.debt)} · 자본총계 ${eok(c.equity)}
