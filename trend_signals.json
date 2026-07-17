@@ -130,7 +130,7 @@
       "pos_52w": 85.8,
       "rs_6m": 115.9,
       "cap": 19957,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 110.3
     },
@@ -163,7 +163,7 @@
       "pos_52w": 76.2,
       "rs_6m": 120.8,
       "cap": 17714,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 106.5
     },
@@ -174,7 +174,7 @@
       "pos_52w": 75.9,
       "rs_6m": 72.1,
       "cap": 55632,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 106.4
     },
@@ -207,7 +207,7 @@
       "pos_52w": 72.3,
       "rs_6m": 125.5,
       "cap": 68195,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 104.9
     },
@@ -240,7 +240,7 @@
       "pos_52w": 67.8,
       "rs_6m": 188.3,
       "cap": 9590,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 103.1
     },
@@ -295,7 +295,7 @@
       "pos_52w": 63.1,
       "rs_6m": 100.2,
       "cap": 13127977,
-      "sector": NaN,
+      "sector": "",
       "has_disc": true,
       "score": 101.2
     },
@@ -306,7 +306,7 @@
       "pos_52w": 63.0,
       "rs_6m": 119.9,
       "cap": 4061,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 101.2
     },
@@ -317,7 +317,7 @@
       "pos_52w": 62.8,
       "rs_6m": 245.1,
       "cap": 32540,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 101.1
     },
@@ -328,7 +328,7 @@
       "pos_52w": 66.6,
       "rs_6m": 57.3,
       "cap": 662000,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 101.0
     },
@@ -339,7 +339,7 @@
       "pos_52w": 67.6,
       "rs_6m": 56.4,
       "cap": 420515,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 100.9
     },
@@ -372,7 +372,7 @@
       "pos_52w": 61.5,
       "rs_6m": 137.4,
       "cap": 1599335,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 100.6
     },
@@ -416,7 +416,7 @@
       "pos_52w": 56.3,
       "rs_6m": 296.4,
       "cap": 953838,
-      "sector": NaN,
+      "sector": "",
       "has_disc": true,
       "score": 98.5
     },
@@ -482,7 +482,7 @@
       "pos_52w": 69.2,
       "rs_6m": 47.3,
       "cap": 39830,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 96.1
     },
@@ -493,7 +493,7 @@
       "pos_52w": 49.0,
       "rs_6m": 222.9,
       "cap": 13590,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 95.6
     },
@@ -515,7 +515,7 @@
       "pos_52w": 45.8,
       "rs_6m": 153.5,
       "cap": 9043,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 94.3
     },
@@ -537,7 +537,7 @@
       "pos_52w": 43.7,
       "rs_6m": 93.1,
       "cap": 158096,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 93.5
     },
@@ -559,7 +559,7 @@
       "pos_52w": 91.3,
       "rs_6m": 27.0,
       "cap": 25399,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 92.7
     },
@@ -581,7 +581,7 @@
       "pos_52w": 40.8,
       "rs_6m": 195.0,
       "cap": 62252,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 92.3
     },
@@ -592,7 +592,7 @@
       "pos_52w": 100.0,
       "rs_6m": 19.9,
       "cap": 163132,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 91.9
     },
@@ -603,7 +603,7 @@
       "pos_52w": 45.1,
       "rs_6m": 56.4,
       "cap": 12331,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 91.9
     },
@@ -614,7 +614,7 @@
       "pos_52w": 62.9,
       "rs_6m": 43.3,
       "cap": 3949,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 91.1
     },
@@ -647,7 +647,7 @@
       "pos_52w": 85.6,
       "rs_6m": 24.9,
       "cap": 147131,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 89.2
     },
@@ -669,7 +669,7 @@
       "pos_52w": 32.7,
       "rs_6m": 176.8,
       "cap": 3366,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 89.1
     },
@@ -680,7 +680,7 @@
       "pos_52w": 56.1,
       "rs_6m": 44.2,
       "cap": 5547,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 89.0
     },
@@ -691,7 +691,7 @@
       "pos_52w": 79.7,
       "rs_6m": 28.4,
       "cap": 23872,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 88.9
     },
@@ -735,7 +735,7 @@
       "pos_52w": 48.5,
       "rs_6m": 46.6,
       "cap": 22656,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 87.4
     },
@@ -746,7 +746,7 @@
       "pos_52w": 76.0,
       "rs_6m": 28.2,
       "cap": 33943,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 87.3
     },
@@ -757,7 +757,7 @@
       "pos_52w": 59.7,
       "rs_6m": 37.3,
       "cap": 285000,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 86.3
     },
@@ -768,7 +768,7 @@
       "pos_52w": 74.4,
       "rs_6m": 27.4,
       "cap": 21748,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 86.2
     },
@@ -779,7 +779,7 @@
       "pos_52w": 70.3,
       "rs_6m": 29.9,
       "cap": 14908010,
-      "sector": NaN,
+      "sector": "",
       "has_disc": true,
       "score": 86.1
     },
@@ -812,7 +812,7 @@
       "pos_52w": 55.9,
       "rs_6m": 37.6,
       "cap": 16027,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 84.9
     },
@@ -823,7 +823,7 @@
       "pos_52w": 79.1,
       "rs_6m": 21.6,
       "cap": 1877,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 84.6
     },
@@ -834,7 +834,7 @@
       "pos_52w": 91.4,
       "rs_6m": 10.3,
       "cap": 7727,
-      "sector": NaN,
+      "sector": "",
       "has_disc": false,
       "score": 82.7
     },
