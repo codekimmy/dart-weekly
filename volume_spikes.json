@@ -9,7 +9,7 @@
       "chg": 26.54,
       "close": 1907,
       "cap": 710,
-      "sector": "",
+      "sector": "종이·목재",
       "has_disc": false
     },
     {
@@ -19,7 +19,7 @@
       "chg": 29.81,
       "close": 2700,
       "cap": 270,
-      "sector": "벤처기업부",
+      "sector": "생활용품",
       "has_disc": false
     },
     {
@@ -29,7 +29,7 @@
       "chg": 6.55,
       "close": 1318,
       "cap": 372,
-      "sector": "중견기업부",
+      "sector": "섬유·의류",
       "has_disc": false
     },
     {
@@ -39,7 +39,7 @@
       "chg": 2.58,
       "close": 23900,
       "cap": 1091,
-      "sector": "",
+      "sector": "식음료",
       "has_disc": false
     },
     {
@@ -49,7 +49,7 @@
       "chg": 10.92,
       "close": 6300,
       "cap": 241,
-      "sector": "벤처기업부",
+      "sector": "식음료",
       "has_disc": false
     },
     {
@@ -59,7 +59,7 @@
       "chg": 29.94,
       "close": 2170,
       "cap": 793,
-      "sector": "",
+      "sector": "종이·목재",
       "has_disc": false
     },
     {
@@ -69,7 +69,7 @@
       "chg": 29.27,
       "close": 2760,
       "cap": 343,
-      "sector": "",
+      "sector": "가구",
       "has_disc": false
     },
     {
@@ -79,7 +79,7 @@
       "chg": 14.62,
       "close": 2430,
       "cap": 157,
-      "sector": "중견기업부",
+      "sector": "식음료",
       "has_disc": false
     },
     {
@@ -89,7 +89,7 @@
       "chg": 5.19,
       "close": 2130,
       "cap": 351,
-      "sector": "중견기업부",
+      "sector": "금융",
       "has_disc": false
     },
     {
@@ -99,7 +99,7 @@
       "chg": 29.98,
       "close": 2285,
       "cap": 305,
-      "sector": "중견기업부",
+      "sector": "유통·도소매",
       "has_disc": false
     },
     {
@@ -109,7 +109,7 @@
       "chg": 20.33,
       "close": 14500,
       "cap": 6584,
-      "sector": "기술성장기업부",
+      "sector": "전문서비스",
       "has_disc": false
     },
     {
@@ -119,7 +119,7 @@
       "chg": 16.2,
       "close": 796,
       "cap": 148,
-      "sector": "중견기업부",
+      "sector": "미디어·콘텐츠",
       "has_disc": false
     },
     {
@@ -129,7 +129,7 @@
       "chg": 9.21,
       "close": 9370,
       "cap": 3073,
-      "sector": "기술성장기업부",
+      "sector": "전문서비스",
       "has_disc": false
     },
     {
@@ -139,7 +139,7 @@
       "chg": 30.0,
       "close": 1053,
       "cap": 437,
-      "sector": "중견기업부",
+      "sector": "IT·소프트웨어",
       "has_disc": false
     },
     {
@@ -149,7 +149,7 @@
       "chg": 20.99,
       "close": 2300,
       "cap": 345,
-      "sector": "",
+      "sector": "섬유·의류",
       "has_disc": false
     },
     {
@@ -159,7 +159,7 @@
       "chg": 8.27,
       "close": 3730,
       "cap": 704,
-      "sector": "",
+      "sector": "생활용품",
       "has_disc": false
     },
     {
@@ -179,7 +179,7 @@
       "chg": 29.95,
       "close": 2755,
       "cap": 326,
-      "sector": "",
+      "sector": "가구",
       "has_disc": false
     },
     {
@@ -189,7 +189,7 @@
       "chg": 16.36,
       "close": 1501,
       "cap": 170,
-      "sector": "기술성장기업부",
+      "sector": "IT·소프트웨어",
       "has_disc": false
     },
     {
@@ -199,7 +199,7 @@
       "chg": 17.07,
       "close": 13580,
       "cap": 1103,
-      "sector": "",
+      "sector": "자동차·부품",
       "has_disc": false
     },
     {
@@ -209,7 +209,7 @@
       "chg": 6.18,
       "close": 2835,
       "cap": 1072,
-      "sector": "중견기업부",
+      "sector": "섬유·의류",
       "has_disc": false
     },
     {
@@ -219,7 +219,7 @@
       "chg": 6.01,
       "close": 1306,
       "cap": 631,
-      "sector": "우량기업부",
+      "sector": "전기장비",
       "has_disc": false
     },
     {
@@ -229,7 +229,7 @@
       "chg": 5.78,
       "close": 1372,
       "cap": 465,
-      "sector": "",
+      "sector": "제약·바이오",
       "has_disc": false
     },
     {
@@ -239,7 +239,7 @@
       "chg": 2.37,
       "close": 2380,
       "cap": 2901,
-      "sector": "투자주의환기종목(소속부없음)",
+      "sector": "제약·바이오",
       "has_disc": false
     },
     {
@@ -249,7 +249,7 @@
       "chg": 29.96,
       "close": 1093,
       "cap": 191,
-      "sector": "벤처기업부",
+      "sector": "화학",
       "has_disc": false
     },
     {
@@ -259,7 +259,7 @@
       "chg": 5.85,
       "close": 2080,
       "cap": 425,
-      "sector": "",
+      "sector": "섬유·의류",
       "has_disc": false
     },
     {
@@ -269,7 +269,7 @@
       "chg": 24.6,
       "close": 1165,
       "cap": 131,
-      "sector": "중견기업부",
+      "sector": "화학",
       "has_disc": false
     },
     {
@@ -279,7 +279,7 @@
       "chg": 1.05,
       "close": 2395,
       "cap": 367,
-      "sector": "중견기업부",
+      "sector": "제약·바이오",
       "has_disc": false
     },
     {
@@ -289,7 +289,7 @@
       "chg": 12.37,
       "close": 3360,
       "cap": 1224,
-      "sector": "벤처기업부",
+      "sector": "화학",
       "has_disc": false
     },
     {
@@ -299,7 +299,7 @@
       "chg": 29.85,
       "close": 435,
       "cap": 204,
-      "sector": "",
+      "sector": "전자부품",
       "has_disc": false
     },
     {
@@ -309,7 +309,7 @@
       "chg": 7.11,
       "close": 4820,
       "cap": 1560,
-      "sector": "우량기업부",
+      "sector": "의료기기",
       "has_disc": false
     },
     {
@@ -319,7 +319,7 @@
       "chg": 5.14,
       "close": 3480,
       "cap": 431,
-      "sector": "중견기업부",
+      "sector": "생활용품",
       "has_disc": false
     },
     {
@@ -329,7 +329,7 @@
       "chg": 10.14,
       "close": 2445,
       "cap": 293,
-      "sector": "",
+      "sector": "운송·물류",
       "has_disc": false
     },
     {
@@ -339,7 +339,7 @@
       "chg": 13.97,
       "close": 2015,
       "cap": 284,
-      "sector": "벤처기업부",
+      "sector": "화학",
       "has_disc": false
     },
     {
@@ -349,7 +349,7 @@
       "chg": 29.9,
       "close": 530,
       "cap": 513,
-      "sector": "중견기업부",
+      "sector": "섬유·의류",
       "has_disc": false
     },
     {
@@ -359,7 +359,7 @@
       "chg": 8.9,
       "close": 2385,
       "cap": 200,
-      "sector": "중견기업부",
+      "sector": "기계·장비",
       "has_disc": false
     },
     {
@@ -369,7 +369,7 @@
       "chg": 11.13,
       "close": 6390,
       "cap": 25923,
-      "sector": "",
+      "sector": "금융",
       "has_disc": false
     },
     {
@@ -379,7 +379,7 @@
       "chg": 19.94,
       "close": 3970,
       "cap": 999,
-      "sector": "벤처기업부",
+      "sector": "전기장비",
       "has_disc": false
     },
     {
@@ -389,7 +389,7 @@
       "chg": 13.26,
       "close": 7600,
       "cap": 2432,
-      "sector": "",
+      "sector": "제약·바이오",
       "has_disc": false
     },
     {
@@ -399,7 +399,7 @@
       "chg": 8.49,
       "close": 12140,
       "cap": 4310,
-      "sector": "우량기업부",
+      "sector": "조선·기타운송",
       "has_disc": false
     },
     {
@@ -409,7 +409,7 @@
       "chg": 3.47,
       "close": 2385,
       "cap": 391,
-      "sector": "우량기업부",
+      "sector": "통신·방송장비",
       "has_disc": false
     },
     {
@@ -419,7 +419,7 @@
       "chg": 2.53,
       "close": 8510,
       "cap": 801,
-      "sector": "",
+      "sector": "식음료",
       "has_disc": false
     },
     {
@@ -429,7 +429,7 @@
       "chg": 4.44,
       "close": 3995,
       "cap": 353,
-      "sector": "기술성장기업부",
+      "sector": "기타 제조",
       "has_disc": false
     },
     {
@@ -439,7 +439,7 @@
       "chg": 8.32,
       "close": 963,
       "cap": 184,
-      "sector": "기술성장기업부",
+      "sector": "IT·소프트웨어",
       "has_disc": false
     },
     {
@@ -449,7 +449,7 @@
       "chg": 0.42,
       "close": 1893,
       "cap": 324,
-      "sector": "벤처기업부",
+      "sector": "IT·소프트웨어",
       "has_disc": false
     },
     {
@@ -459,7 +459,7 @@
       "chg": 5.58,
       "close": 5680,
       "cap": 745,
-      "sector": "중견기업부",
+      "sector": "기계·장비",
       "has_disc": false
     },
     {
@@ -469,7 +469,7 @@
       "chg": 6.08,
       "close": 4795,
       "cap": 1311,
-      "sector": "투자주의환기종목(소속부없음)",
+      "sector": "지주회사",
       "has_disc": false
     },
     {
@@ -479,7 +479,7 @@
       "chg": 8.09,
       "close": 36750,
       "cap": 13343,
-      "sector": "",
+      "sector": "임대·리스",
       "has_disc": false
     },
     {
@@ -489,7 +489,7 @@
       "chg": 9.58,
       "close": 23450,
       "cap": 5138,
-      "sector": "중견기업부",
+      "sector": "화학",
       "has_disc": false
     },
     {
@@ -499,7 +499,7 @@
       "chg": 5.96,
       "close": 5870,
       "cap": 635,
-      "sector": "",
+      "sector": "유통·도소매",
       "has_disc": false
     },
     {
@@ -509,7 +509,7 @@
       "chg": 0.5,
       "close": 2025,
       "cap": 306,
-      "sector": "벤처기업부",
+      "sector": "유통·도소매",
       "has_disc": false
     },
     {
@@ -519,7 +519,7 @@
       "chg": 0.24,
       "close": 2085,
       "cap": 146,
-      "sector": "SPAC(소속부없음)",
+      "sector": "금융",
       "has_disc": false
     },
     {
@@ -529,7 +529,7 @@
       "chg": 4.28,
       "close": 17290,
       "cap": 2834,
-      "sector": "우량기업부",
+      "sector": "화학",
       "has_disc": false
     },
     {
@@ -539,7 +539,7 @@
       "chg": 3.76,
       "close": 121400,
       "cap": 205230,
-      "sector": "",
+      "sector": "석유·정유",
       "has_disc": false
     },
     {
@@ -549,7 +549,7 @@
       "chg": 1.73,
       "close": 35300,
       "cap": 47018,
-      "sector": "중견기업부",
+      "sector": "제약·바이오",
       "has_disc": false
     },
     {
@@ -559,7 +559,7 @@
       "chg": 0.25,
       "close": 8030,
       "cap": 1606,
-      "sector": "중견기업부",
+      "sector": "전기장비",
       "has_disc": false
     },
     {
@@ -569,7 +569,7 @@
       "chg": 29.97,
       "close": 1583,
       "cap": 206,
-      "sector": "중견기업부",
+      "sector": "철강·금속",
       "has_disc": false
     },
     {
@@ -579,7 +579,7 @@
       "chg": 0.35,
       "close": 5770,
       "cap": 904,
-      "sector": "우량기업부",
+      "sector": "교육",
       "has_disc": false
     },
     {
@@ -589,7 +589,7 @@
       "chg": 2.91,
       "close": 8480,
       "cap": 2324,
-      "sector": "",
+      "sector": "유통·도소매",
       "has_disc": false
     },
     {
@@ -599,7 +599,7 @@
       "chg": 4.0,
       "close": 10390,
       "cap": 1527,
-      "sector": "",
+      "sector": "제약·바이오",
       "has_disc": false
     }
   ]

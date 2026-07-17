@@ -9,7 +9,7 @@
       "pos_52w": 99.3,
       "rs_6m": 294.4,
       "cap": 31248,
-      "sector": "우량기업부",
+      "sector": "정밀·광학기기",
       "has_disc": false,
       "score": 115.7
     },
@@ -20,7 +20,7 @@
       "pos_52w": 96.0,
       "rs_6m": 140.1,
       "cap": 4950,
-      "sector": "벤처기업부",
+      "sector": "전자부품",
       "has_disc": false,
       "score": 114.4
     },
@@ -31,7 +31,7 @@
       "pos_52w": 95.2,
       "rs_6m": 106.3,
       "cap": 5810,
-      "sector": "벤처기업부",
+      "sector": "화학",
       "has_disc": false,
       "score": 114.1
     },
@@ -42,7 +42,7 @@
       "pos_52w": 92.4,
       "rs_6m": 335.1,
       "cap": 56600,
-      "sector": "우량기업부",
+      "sector": "기계·장비",
       "has_disc": false,
       "score": 113.0
     },
@@ -53,7 +53,7 @@
       "pos_52w": 90.5,
       "rs_6m": 237.1,
       "cap": 28511,
-      "sector": "우량기업부",
+      "sector": "기계·장비",
       "has_disc": false,
       "score": 112.2
     },
@@ -64,7 +64,7 @@
       "pos_52w": 90.2,
       "rs_6m": 102.6,
       "cap": 1615,
-      "sector": "중견기업부",
+      "sector": "식음료",
       "has_disc": false,
       "score": 112.1
     },
@@ -75,7 +75,7 @@
       "pos_52w": 95.5,
       "rs_6m": 56.0,
       "cap": 1293,
-      "sector": "벤처기업부",
+      "sector": "통신·방송장비",
       "has_disc": false,
       "score": 111.8
     },
@@ -86,7 +86,7 @@
       "pos_52w": 89.3,
       "rs_6m": 243.1,
       "cap": 37616,
-      "sector": "우량기업부",
+      "sector": "기계·장비",
       "has_disc": false,
       "score": 111.7
     },
@@ -97,7 +97,7 @@
       "pos_52w": 89.3,
       "rs_6m": 79.9,
       "cap": 8773,
-      "sector": "우량기업부",
+      "sector": "전자부품",
       "has_disc": false,
       "score": 111.7
     },
@@ -108,7 +108,7 @@
       "pos_52w": 86.5,
       "rs_6m": 274.6,
       "cap": 8591,
-      "sector": "우량기업부",
+      "sector": "철강·금속",
       "has_disc": false,
       "score": 110.6
     },
@@ -119,7 +119,7 @@
       "pos_52w": 86.1,
       "rs_6m": 100.1,
       "cap": 30920,
-      "sector": "우량기업부",
+      "sector": "기계·장비",
       "has_disc": false,
       "score": 110.4
     },
@@ -130,7 +130,7 @@
       "pos_52w": 85.8,
       "rs_6m": 115.9,
       "cap": 19957,
-      "sector": "",
+      "sector": "정밀·광학기기",
       "has_disc": false,
       "score": 110.3
     },
@@ -141,7 +141,7 @@
       "pos_52w": 84.7,
       "rs_6m": 174.0,
       "cap": 20636,
-      "sector": "우량기업부",
+      "sector": "기계·장비",
       "has_disc": false,
       "score": 109.9
     },
@@ -152,7 +152,7 @@
       "pos_52w": 80.2,
       "rs_6m": 101.3,
       "cap": 4074,
-      "sector": "우량기업부",
+      "sector": "기계·장비",
       "has_disc": false,
       "score": 108.1
     },
@@ -163,7 +163,7 @@
       "pos_52w": 76.2,
       "rs_6m": 120.8,
       "cap": 17714,
-      "sector": "",
+      "sector": "건설",
       "has_disc": false,
       "score": 106.5
     },
@@ -174,7 +174,7 @@
       "pos_52w": 75.9,
       "rs_6m": 72.1,
       "cap": 55632,
-      "sector": "",
+      "sector": "유통·도소매",
       "has_disc": false,
       "score": 106.4
     },
@@ -185,7 +185,7 @@
       "pos_52w": 75.0,
       "rs_6m": 452.8,
       "cap": 87338,
-      "sector": "우량기업부",
+      "sector": "기계·장비",
       "has_disc": false,
       "score": 106.0
     },
@@ -196,7 +196,7 @@
       "pos_52w": 75.1,
       "rs_6m": 131.1,
       "cap": 5009,
-      "sector": "중견기업부",
+      "sector": "기계·장비",
       "has_disc": false,
       "score": 106.0
     },
@@ -207,7 +207,7 @@
       "pos_52w": 72.3,
       "rs_6m": 125.5,
       "cap": 68195,
-      "sector": "",
+      "sector": "전자부품",
       "has_disc": false,
       "score": 104.9
     },
@@ -218,7 +218,7 @@
       "pos_52w": 68.3,
       "rs_6m": 68.9,
       "cap": 40236,
-      "sector": "중견기업부",
+      "sector": "전자부품",
       "has_disc": false,
       "score": 103.3
     },
@@ -229,7 +229,7 @@
       "pos_52w": 67.9,
       "rs_6m": 179.6,
       "cap": 4480,
-      "sector": "우량기업부",
+      "sector": "전자부품",
       "has_disc": false,
       "score": 103.2
     },
@@ -240,7 +240,7 @@
       "pos_52w": 67.8,
       "rs_6m": 188.3,
       "cap": 9590,
-      "sector": "",
+      "sector": "전기장비",
       "has_disc": false,
       "score": 103.1
     },
@@ -251,7 +251,7 @@
       "pos_52w": 66.6,
       "rs_6m": 60.9,
       "cap": 2625,
-      "sector": "일반기업부",
+      "sector": "전자부품",
       "has_disc": false,
       "score": 102.6
     },
@@ -262,7 +262,7 @@
       "pos_52w": 66.5,
       "rs_6m": 169.5,
       "cap": 2013,
-      "sector": "벤처기업부",
+      "sector": "기계·장비",
       "has_disc": false,
       "score": 102.6
     },
@@ -273,7 +273,7 @@
       "pos_52w": 64.4,
       "rs_6m": 96.0,
       "cap": 2418,
-      "sector": "벤처기업부",
+      "sector": "IT·소프트웨어",
       "has_disc": false,
       "score": 101.8
     },
@@ -284,7 +284,7 @@
       "pos_52w": 63.7,
       "rs_6m": 66.6,
       "cap": 2767,
-      "sector": "벤처기업부",
+      "sector": "기계·장비",
       "has_disc": false,
       "score": 101.5
     },
@@ -295,7 +295,7 @@
       "pos_52w": 63.1,
       "rs_6m": 100.2,
       "cap": 13127977,
-      "sector": "",
+      "sector": "반도체",
       "has_disc": true,
       "score": 101.2
     },
@@ -306,7 +306,7 @@
       "pos_52w": 63.0,
       "rs_6m": 119.9,
       "cap": 4061,
-      "sector": "",
+      "sector": "건설",
       "has_disc": false,
       "score": 101.2
     },
@@ -317,7 +317,7 @@
       "pos_52w": 62.8,
       "rs_6m": 245.1,
       "cap": 32540,
-      "sector": "",
+      "sector": "전기장비",
       "has_disc": false,
       "score": 101.1
     },
@@ -328,7 +328,7 @@
       "pos_52w": 66.6,
       "rs_6m": 57.3,
       "cap": 662000,
-      "sector": "",
+      "sector": "금융",
       "has_disc": false,
       "score": 101.0
     },
@@ -339,7 +339,7 @@
       "pos_52w": 67.6,
       "rs_6m": 56.4,
       "cap": 420515,
-      "sector": "",
+      "sector": "금융",
       "has_disc": false,
       "score": 100.9
     },
@@ -350,7 +350,7 @@
       "pos_52w": 62.1,
       "rs_6m": 67.4,
       "cap": 5719,
-      "sector": "우량기업부",
+      "sector": "통신·방송장비",
       "has_disc": false,
       "score": 100.8
     },
@@ -361,7 +361,7 @@
       "pos_52w": 62.0,
       "rs_6m": 76.3,
       "cap": 4361,
-      "sector": "중견기업부",
+      "sector": "전문서비스",
       "has_disc": false,
       "score": 100.8
     },
@@ -372,7 +372,7 @@
       "pos_52w": 61.5,
       "rs_6m": 137.4,
       "cap": 1599335,
-      "sector": "",
+      "sector": "금융",
       "has_disc": false,
       "score": 100.6
     },
@@ -383,7 +383,7 @@
       "pos_52w": 61.1,
       "rs_6m": 123.7,
       "cap": 28208,
-      "sector": "우량기업부",
+      "sector": "반도체",
       "has_disc": false,
       "score": 100.4
     },
@@ -394,7 +394,7 @@
       "pos_52w": 60.9,
       "rs_6m": 164.3,
       "cap": 1507,
-      "sector": "우량기업부",
+      "sector": "자동차·부품",
       "has_disc": false,
       "score": 100.4
     },
@@ -405,7 +405,7 @@
       "pos_52w": 56.9,
       "rs_6m": 234.8,
       "cap": 1157,
-      "sector": "기술성장기업부",
+      "sector": "제약·바이오",
       "has_disc": false,
       "score": 98.8
     },
@@ -416,7 +416,7 @@
       "pos_52w": 56.3,
       "rs_6m": 296.4,
       "cap": 953838,
-      "sector": "",
+      "sector": "전자부품",
       "has_disc": true,
       "score": 98.5
     },
@@ -427,7 +427,7 @@
       "pos_52w": 87.4,
       "rs_6m": 39.2,
       "cap": 7306,
-      "sector": "우량기업부",
+      "sector": "의료기기",
       "has_disc": false,
       "score": 98.5
     },
@@ -438,7 +438,7 @@
       "pos_52w": 56.0,
       "rs_6m": 124.3,
       "cap": 10569,
-      "sector": "우량기업부",
+      "sector": "유통·도소매",
       "has_disc": false,
       "score": 98.4
     },
@@ -449,7 +449,7 @@
       "pos_52w": 56.0,
       "rs_6m": 298.0,
       "cap": 1570,
-      "sector": "중견기업부",
+      "sector": "반도체",
       "has_disc": false,
       "score": 98.4
     },
@@ -460,7 +460,7 @@
       "pos_52w": 54.9,
       "rs_6m": 190.4,
       "cap": 35271,
-      "sector": "기술성장기업부",
+      "sector": "반도체",
       "has_disc": false,
       "score": 98.0
     },
@@ -471,7 +471,7 @@
       "pos_52w": 76.8,
       "rs_6m": 42.5,
       "cap": 69061,
-      "sector": "우량기업부",
+      "sector": "기계·장비",
       "has_disc": false,
       "score": 96.2
     },
@@ -482,7 +482,7 @@
       "pos_52w": 69.2,
       "rs_6m": 47.3,
       "cap": 39830,
-      "sector": "",
+      "sector": "유통·도소매",
       "has_disc": false,
       "score": 96.1
     },
@@ -504,7 +504,7 @@
       "pos_52w": 46.0,
       "rs_6m": 117.7,
       "cap": 1981,
-      "sector": "중견기업부",
+      "sector": "철강·금속",
       "has_disc": false,
       "score": 94.4
     },
@@ -515,7 +515,7 @@
       "pos_52w": 45.8,
       "rs_6m": 153.5,
       "cap": 9043,
-      "sector": "",
+      "sector": "전자부품",
       "has_disc": false,
       "score": 94.3
     },
@@ -526,7 +526,7 @@
       "pos_52w": 45.0,
       "rs_6m": 74.2,
       "cap": 1368,
-      "sector": "기술성장기업부",
+      "sector": "IT·소프트웨어",
       "has_disc": false,
       "score": 94.0
     },
@@ -537,7 +537,7 @@
       "pos_52w": 43.7,
       "rs_6m": 93.1,
       "cap": 158096,
-      "sector": "",
+      "sector": "전자부품",
       "has_disc": false,
       "score": 93.5
     },
@@ -548,7 +548,7 @@
       "pos_52w": 69.1,
       "rs_6m": 42.2,
       "cap": 1989,
-      "sector": "중견기업부",
+      "sector": "전자부품",
       "has_disc": false,
       "score": 93.0
     },
@@ -559,7 +559,7 @@
       "pos_52w": 91.3,
       "rs_6m": 27.0,
       "cap": 25399,
-      "sector": "",
+      "sector": "화학",
       "has_disc": false,
       "score": 92.7
     },
@@ -570,7 +570,7 @@
       "pos_52w": 69.1,
       "rs_6m": 41.6,
       "cap": 5994,
-      "sector": "우량기업부",
+      "sector": "기계·장비",
       "has_disc": false,
       "score": 92.6
     },
@@ -581,7 +581,7 @@
       "pos_52w": 40.8,
       "rs_6m": 195.0,
       "cap": 62252,
-      "sector": "",
+      "sector": "건설",
       "has_disc": false,
       "score": 92.3
     },
@@ -592,7 +592,7 @@
       "pos_52w": 100.0,
       "rs_6m": 19.9,
       "cap": 163132,
-      "sector": "",
+      "sector": "석유·정유",
       "has_disc": false,
       "score": 91.9
     },
@@ -603,7 +603,7 @@
       "pos_52w": 45.1,
       "rs_6m": 56.4,
       "cap": 12331,
-      "sector": "",
+      "sector": "반도체",
       "has_disc": false,
       "score": 91.9
     },
@@ -614,7 +614,7 @@
       "pos_52w": 62.9,
       "rs_6m": 43.3,
       "cap": 3949,
-      "sector": "",
+      "sector": "전자부품",
       "has_disc": false,
       "score": 91.1
     },
@@ -625,7 +625,7 @@
       "pos_52w": 71.1,
       "rs_6m": 37.5,
       "cap": 33640,
-      "sector": "우량기업부",
+      "sector": "기계·장비",
       "has_disc": false,
       "score": 90.9
     },
@@ -636,7 +636,7 @@
       "pos_52w": 35.4,
       "rs_6m": 197.4,
       "cap": 16015,
-      "sector": "중견기업부",
+      "sector": "전기장비",
       "has_disc": false,
       "score": 90.2
     },
@@ -647,7 +647,7 @@
       "pos_52w": 85.6,
       "rs_6m": 24.9,
       "cap": 147131,
-      "sector": "",
+      "sector": "화학",
       "has_disc": false,
       "score": 89.2
     },
@@ -658,7 +658,7 @@
       "pos_52w": 33.0,
       "rs_6m": 84.8,
       "cap": 2660,
-      "sector": "투자주의환기종목(소속부없음)",
+      "sector": "반도체",
       "has_disc": false,
       "score": 89.2
     },
@@ -669,7 +669,7 @@
       "pos_52w": 32.7,
       "rs_6m": 176.8,
       "cap": 3366,
-      "sector": "",
+      "sector": "반도체",
       "has_disc": false,
       "score": 89.1
     },
@@ -680,7 +680,7 @@
       "pos_52w": 56.1,
       "rs_6m": 44.2,
       "cap": 5547,
-      "sector": "",
+      "sector": "전기·가스·수도",
       "has_disc": false,
       "score": 89.0
     },
@@ -691,7 +691,7 @@
       "pos_52w": 79.7,
       "rs_6m": 28.4,
       "cap": 23872,
-      "sector": "",
+      "sector": "전자부품",
       "has_disc": false,
       "score": 88.9
     },
@@ -702,7 +702,7 @@
       "pos_52w": 53.1,
       "rs_6m": 45.6,
       "cap": 2481,
-      "sector": "중견기업부",
+      "sector": "전자부품",
       "has_disc": false,
       "score": 88.6
     },
@@ -713,7 +713,7 @@
       "pos_52w": 100.0,
       "rs_6m": 14.2,
       "cap": 2251,
-      "sector": "중견기업부",
+      "sector": "IT·소프트웨어",
       "has_disc": false,
       "score": 88.5
     },
@@ -724,7 +724,7 @@
       "pos_52w": 31.3,
       "rs_6m": 175.1,
       "cap": 1945,
-      "sector": "벤처기업부",
+      "sector": "유통·도소매",
       "has_disc": false,
       "score": 88.5
     },
@@ -735,7 +735,7 @@
       "pos_52w": 48.5,
       "rs_6m": 46.6,
       "cap": 22656,
-      "sector": "",
+      "sector": "금융",
       "has_disc": false,
       "score": 87.4
     },
@@ -746,7 +746,7 @@
       "pos_52w": 76.0,
       "rs_6m": 28.2,
       "cap": 33943,
-      "sector": "",
+      "sector": "유통·도소매",
       "has_disc": false,
       "score": 87.3
     },
@@ -757,7 +757,7 @@
       "pos_52w": 59.7,
       "rs_6m": 37.3,
       "cap": 285000,
-      "sector": "",
+      "sector": "전기장비",
       "has_disc": false,
       "score": 86.3
     },
@@ -768,7 +768,7 @@
       "pos_52w": 74.4,
       "rs_6m": 27.4,
       "cap": 21748,
-      "sector": "",
+      "sector": "금융",
       "has_disc": false,
       "score": 86.2
     },
@@ -779,7 +779,7 @@
       "pos_52w": 70.3,
       "rs_6m": 29.9,
       "cap": 14908010,
-      "sector": "",
+      "sector": "통신·방송장비",
       "has_disc": true,
       "score": 86.1
     },
@@ -790,7 +790,7 @@
       "pos_52w": 100.0,
       "rs_6m": 10.2,
       "cap": 2857,
-      "sector": "우량기업부",
+      "sector": "유통·도소매",
       "has_disc": false,
       "score": 86.1
     },
@@ -801,7 +801,7 @@
       "pos_52w": 72.1,
       "rs_6m": 27.3,
       "cap": 6210,
-      "sector": "벤처기업부",
+      "sector": "기계·장비",
       "has_disc": false,
       "score": 85.2
     },
@@ -812,7 +812,7 @@
       "pos_52w": 55.9,
       "rs_6m": 37.6,
       "cap": 16027,
-      "sector": "",
+      "sector": "유통·도소매",
       "has_disc": false,
       "score": 84.9
     },
@@ -823,7 +823,7 @@
       "pos_52w": 79.1,
       "rs_6m": 21.6,
       "cap": 1877,
-      "sector": "",
+      "sector": "금융",
       "has_disc": false,
       "score": 84.6
     },
@@ -834,7 +834,7 @@
       "pos_52w": 91.4,
       "rs_6m": 10.3,
       "cap": 7727,
-      "sector": "",
+      "sector": "금융",
       "has_disc": false,
       "score": 82.7
     },
@@ -845,7 +845,7 @@
       "pos_52w": 70.3,
       "rs_6m": 23.7,
       "cap": 1558,
-      "sector": "우량기업부",
+      "sector": "운송·물류",
       "has_disc": false,
       "score": 82.3
     },
@@ -856,7 +856,7 @@
       "pos_52w": 65.3,
       "rs_6m": 26.8,
       "cap": 1522,
-      "sector": "벤처기업부",
+      "sector": "IT·소프트웨어",
       "has_disc": false,
       "score": 82.2
     },
@@ -867,7 +867,7 @@
       "pos_52w": 96.1,
       "rs_6m": 6.0,
       "cap": 1520,
-      "sector": "우량기업부",
+      "sector": "제약·바이오",
       "has_disc": false,
       "score": 82.0
     },
@@ -878,7 +878,7 @@
       "pos_52w": 71.1,
       "rs_6m": 22.2,
       "cap": 12072,
-      "sector": "벤처기업부",
+      "sector": "전문서비스",
       "has_disc": false,
       "score": 81.8
     }

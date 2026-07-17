@@ -48,20 +48,22 @@ def _risk_tickers():
 
 
 def _sector_marcap():
-    """종목코드 → (업종, 시가총액[억원]) 매핑. 실패 시 빈 dict."""
+    """종목코드 → (업종, 시가총액[억원]). 업종은 KRX-DESC(표준산업분류), 시총은 KRX 스냅샷."""
     info = {}
+    sectors = dc.sector_map()          # 짧은 업종명
     try:
         import FinanceDataReader as fdr
         lst = fdr.StockListing("KRX")
         code_col = "Code" if "Code" in lst.columns else "Symbol"
         for _, r in lst.iterrows():
             code = str(r.get(code_col, "")).zfill(6)
-            sector = r.get("Sector") or r.get("Industry") or ""
             marcap = r.get("Marcap")
             cap_eok = round(marcap / 1e8) if pd.notna(marcap) and marcap else None
-            info[code] = (sector, cap_eok)
+            info[code] = (sectors.get(code, ""), cap_eok)
     except Exception as e:
-        print(f"[info] 업종·시총 매핑 수집 실패(무시): {e}")
+        print(f"[info] 시총 매핑 수집 실패(무시): {e}")
+        for code, sec in sectors.items():
+            info[code] = (sec, None)
     return info
 
 
@@ -141,7 +143,7 @@ def collect():
             "ticker": code, "corp_code": r["corp_code"], "date": r["date"],
             "ev": r["report_nm"],
             "scale": (f"시총 {cap:,}억" if cap else ""),
-            "sector": sector or "",
+            "sector": ("" if pd.isna(sector) else str(sector)) if sector is not None else "",
             "repeat": int(repeat_count.get((code, r["cat"]), 0)),
             "dir": dc.DIR_DEFAULT.get(r["sub"], "n"),
             "link": f"https://dart.fss.or.kr/dsaf001/main.do?rcpNo={r['rcept_no']}",
@@ -153,7 +155,7 @@ def collect():
 def _save(items):
     payload = {"updated": datetime.today().strftime("%Y-%m-%d"), "rows": items}
     with open("disclosures.json", "w", encoding="utf-8") as f:
-        json.dump(payload, f, ensure_ascii=False, indent=2)
+        json.dump(payload, f, ensure_ascii=False, indent=2, allow_nan=False)
 
 
 if __name__ == "__main__":
